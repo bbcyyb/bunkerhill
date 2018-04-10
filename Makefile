@@ -15,18 +15,18 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 
 all: test build
 install:
-	$(GOINSTALLl) -o $(BINARY_NAME) -v
+	$(GOINSTALL)
 build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 test:
 	$(GOTEST) -v ./...
 clean:
-$(GOCLEAN)
-rm -f $(BINARY_NAME)
-rm -f $(BINARY_UNIX)
+	$(GOCLEAN)
+	rm -f $(BINARY_NAME)
+	rm -f $(BINARY_UNIX)
 run:
-$(GOBUILD) -o $(BINARY_NAME) -v ./...
-./$(BINARY_NAME)
+	$(GOBUILD) -o $(BINARY_NAME) -v ./...
+	./$(BINARY_NAME)
 
 # Cross compilation
 build-linux:
