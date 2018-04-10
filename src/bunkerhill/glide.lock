@@ -1,0 +1,72 @@
+hash: 8f8f38db406798eeaf8388ca8b8a0889177e27e6dc09942a436e430be26134df
+updated: 2018-04-10T18:31:22.279084652+08:00
+imports:
+- name: github.com/asaskevich/govalidator
+  version: 7d2e70ef918f16bd6455529af38304d6d025c952
+- name: github.com/docker/go-units
+  version: 47565b4f722fb6ceae66b95f853feed578a4a51c
+- name: github.com/go-openapi/analysis
+  version: f59a71f0ece6f9dfb438be7f45148f006cbad88e
+- name: github.com/go-openapi/errors
+  version: 7bcb96a367bac6b76e6e42fa84155bb5581dcff8
+- name: github.com/go-openapi/jsonpointer
+  version: 3a0015ad55fa9873f41605d3e8f28cd279c32ab2
+- name: github.com/go-openapi/jsonreference
+  version: 3fb327e6747da3043567ee86abd02bb6376b6be2
+- name: github.com/go-openapi/loads
+  version: 2a2b323bab96e6b1fdee110e57d959322446e9c9
+- name: github.com/go-openapi/runtime
+  version: 62281b694b396a17fe3e4313ee8b0ca2c3cca719
+  subpackages:
+  - flagext
+  - logger
+  - middleware
+  - middleware/denco
+  - middleware/header
+  - middleware/untyped
+  - security
+- name: github.com/go-openapi/spec
+  version: 370d9e047557906322be8396e77cb0376be6cb96
+- name: github.com/go-openapi/strfmt
+  version: 481808443b00a14745fada967cb5eeff0f9b1df2
+- name: github.com/go-openapi/swag
+  version: 811b1089cde9dad18d4d0c2d09fbdbf28dbd27a5
+- name: github.com/go-openapi/validate
+  version: 180bba53b98899f743a112e568bed9e2ef31aa20
+- name: github.com/jessevdk/go-flags
+  version: c6ca198ec95c841fdb89fc0de7496fed11ab854e
+- name: github.com/mailru/easyjson
+  version: 8b799c424f57fa123fc63a99d6383bc6e4c02578
+  subpackages:
+  - buffer
+  - jlexer
+  - jwriter
+- name: github.com/mitchellh/mapstructure
+  version: 00c29f56e2386353d58c599509e8dc3801b0d716
+- name: github.com/PuerkitoBio/purell
+  version: 975f53781597ed779763b7b65566e74c4004d8de
+- name: github.com/PuerkitoBio/urlesc
+  version: de5bf2ad457846296e2031421a34e2568e304e35
+- name: github.com/tylerb/graceful
+  version: 4654dfbb6ad53cb5e27f37d99b02e16c1872fbbb
+- name: golang.org/x/net
+  version: 61147c48b25b599e5b561d2e9c4f3e1ef489ca41
+  subpackages:
+  - context
+  - idna
+- name: golang.org/x/text
+  version: 367d765ae293e2b5781a597dd9d433117e82fc51
+  subpackages:
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+  - width
+- name: gopkg.in/mgo.v2
+  version: 3f83fa5005286a7fe593b055f0d7771a7dce4655
+  subpackages:
+  - bson
+  - internal/json
+- name: gopkg.in/yaml.v2
+  version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
+testImports: []

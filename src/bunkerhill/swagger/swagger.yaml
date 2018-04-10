@@ -1,0 +1,24 @@
+---
+
+swagger: '2.0'
+info:
+  version: 0.0.1
+  title: Bunker Hill
+paths:
+  /blog:
+    get:
+      produces:
+      - text/plain
+      parameters:
+      - name: name
+        required: false
+        type: string
+        in: query
+        description: defaults to World if not given
+      operationId: getBlog
+      responses:
+        200:
+          description: returns all blogs
+          schema:
+            type: string
+            description: contains the actual blog as plain text
