@@ -4,6 +4,11 @@ info:
   title: "Bunker Hill"
   description: "RestAPI supporting lifecycle management for blog system named Missouri"
   version: "0.0.1"
+tags:
+- name: "apiversion"
+  description: "Restful API Version"
+- name: "blog"
+  description: "Article information in blog"
 paths:
   /apiversion:
     get:
@@ -25,6 +30,8 @@ paths:
       
   /blog:
     get:
+      tags:
+      - "blog"
       produces:
       - "application/json"
       parameters:
