@@ -20,14 +20,45 @@ func init() {
 	SwaggerJSON = json.RawMessage([]byte(`{
   "swagger": "2.0",
   "info": {
+    "description": "RestAPI supporting lifecycle management for blog system named Missouri",
     "title": "Bunker Hill",
     "version": "0.0.1"
   },
+  "basePath": "/api",
   "paths": {
+    "/apiversion": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "apiversion"
+        ],
+        "summary": "Return the bunkerhill version",
+        "operationId": "getAPIVersion",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/apiversion"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          }
+        }
+      }
+    },
     "/blog": {
       "get": {
         "produces": [
-          "text/plain"
+          "application/json"
+        ],
+        "tags": [
+          "blog"
         ],
         "operationId": "getBlog",
         "parameters": [
@@ -40,28 +71,173 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "returns all blogs",
+            "description": "Successful response",
             "schema": {
-              "description": "contains the actual blog as plain text",
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/blogs"
+                },
+                "paging": {
+                  "$ref": "#/definitions/paging"
+                }
+              }
             }
           }
         }
       }
     }
-  }
+  },
+  "definitions": {
+    "apiversion": {
+      "type": "object",
+      "required": [
+        "apiVersion"
+      ],
+      "properties": {
+        "apiVersion": {
+          "type": "string"
+        }
+      }
+    },
+    "author": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "blog": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "#/definitions/author"
+        },
+        "body": {
+          "type": "string"
+        },
+        "body_html": {
+          "type": "string"
+        },
+        "comments": {
+          "$ref": "#/definitions/comment"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "blogs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/blog"
+      }
+    },
+    "comment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "generic.deleteResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "generic.error": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "paging": {
+      "type": "object",
+      "properties": {
+        "next": {
+          "type": "string",
+          "format": "uri"
+        },
+        "previous": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "description": "Restful API Version",
+      "name": "apiversion"
+    },
+    {
+      "description": "Article information in blog",
+      "name": "blog"
+    }
+  ]
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
   "swagger": "2.0",
   "info": {
+    "description": "RestAPI supporting lifecycle management for blog system named Missouri",
     "title": "Bunker Hill",
     "version": "0.0.1"
   },
+  "basePath": "/api",
   "paths": {
+    "/apiversion": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "apiversion"
+        ],
+        "summary": "Return the bunkerhill version",
+        "operationId": "getAPIVersion",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/apiversion"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          }
+        }
+      }
+    },
     "/blog": {
       "get": {
         "produces": [
-          "text/plain"
+          "application/json"
+        ],
+        "tags": [
+          "blog"
         ],
         "operationId": "getBlog",
         "parameters": [
@@ -74,15 +250,133 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "returns all blogs",
+            "description": "Successful response",
             "schema": {
-              "description": "contains the actual blog as plain text",
-              "type": "string"
+              "$ref": "#/definitions/getBlogOKBody"
             }
           }
         }
       }
     }
-  }
+  },
+  "definitions": {
+    "apiversion": {
+      "type": "object",
+      "required": [
+        "apiVersion"
+      ],
+      "properties": {
+        "apiVersion": {
+          "type": "string"
+        }
+      }
+    },
+    "author": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "blog": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "#/definitions/author"
+        },
+        "body": {
+          "type": "string"
+        },
+        "body_html": {
+          "type": "string"
+        },
+        "comments": {
+          "$ref": "#/definitions/comment"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "blogs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/blog"
+      }
+    },
+    "comment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "generic.deleteResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "generic.error": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "getBlogOKBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/blogs"
+        },
+        "paging": {
+          "$ref": "#/definitions/paging"
+        }
+      },
+      "x-go-gen-location": "operations"
+    },
+    "paging": {
+      "type": "object",
+      "properties": {
+        "next": {
+          "type": "string",
+          "format": "uri"
+        },
+        "previous": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "description": "Restful API Version",
+      "name": "apiversion"
+    },
+    {
+      "description": "Article information in blog",
+      "name": "blog"
+    }
+  ]
 }`))
 }

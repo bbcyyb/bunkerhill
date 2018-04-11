@@ -2,18 +2,20 @@
 
 /*
 Package restapi Bunker Hill
+RestAPI supporting lifecycle management for blog system named Missouri
+
 
     Schemes:
       http
     Host: localhost
-    BasePath: /
+    BasePath: /api
     Version: 0.0.1
 
     Consumes:
     - application/json
 
     Produces:
-    - text/plain
+    - application/json
 
 swagger:meta
 */

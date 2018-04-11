@@ -18,6 +18,9 @@ import (
 	spec "github.com/go-openapi/spec"
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+
+	"github.com/bbcyyb/bunkerhill/restapi/operations/apiversion"
+	"github.com/bbcyyb/bunkerhill/restapi/operations/blog"
 )
 
 // NewBunkerhillAPI creates a new Bunkerhill instance
@@ -36,14 +39,17 @@ func NewBunkerhillAPI(spec *loads.Document) *BunkerhillAPI {
 		APIKeyAuthenticator: security.APIKeyAuth,
 		BearerAuthenticator: security.BearerAuth,
 		JSONConsumer:        runtime.JSONConsumer(),
-		TxtProducer:         runtime.TextProducer(),
-		GetBlogHandler: GetBlogHandlerFunc(func(params GetBlogParams) middleware.Responder {
-			return middleware.NotImplemented("operation GetBlog has not yet been implemented")
+		JSONProducer:        runtime.JSONProducer(),
+		ApiversionGetAPIVersionHandler: apiversion.GetAPIVersionHandlerFunc(func(params apiversion.GetAPIVersionParams) middleware.Responder {
+			return middleware.NotImplemented("operation ApiversionGetAPIVersion has not yet been implemented")
+		}),
+		BlogGetBlogHandler: blog.GetBlogHandlerFunc(func(params blog.GetBlogParams) middleware.Responder {
+			return middleware.NotImplemented("operation BlogGetBlog has not yet been implemented")
 		}),
 	}
 }
 
-/*BunkerhillAPI the bunkerhill API */
+/*BunkerhillAPI RestAPI supporting lifecycle management for blog system named Missouri */
 type BunkerhillAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
@@ -68,11 +74,13 @@ type BunkerhillAPI struct {
 	// JSONConsumer registers a consumer for a "application/json" mime type
 	JSONConsumer runtime.Consumer
 
-	// TxtProducer registers a producer for a "text/plain" mime type
-	TxtProducer runtime.Producer
+	// JSONProducer registers a producer for a "application/json" mime type
+	JSONProducer runtime.Producer
 
-	// GetBlogHandler sets the operation handler for the get blog operation
-	GetBlogHandler GetBlogHandler
+	// ApiversionGetAPIVersionHandler sets the operation handler for the get API version operation
+	ApiversionGetAPIVersionHandler apiversion.GetAPIVersionHandler
+	// BlogGetBlogHandler sets the operation handler for the get blog operation
+	BlogGetBlogHandler blog.GetBlogHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -132,12 +140,16 @@ func (o *BunkerhillAPI) Validate() error {
 		unregistered = append(unregistered, "JSONConsumer")
 	}
 
-	if o.TxtProducer == nil {
-		unregistered = append(unregistered, "TxtProducer")
+	if o.JSONProducer == nil {
+		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.GetBlogHandler == nil {
-		unregistered = append(unregistered, "GetBlogHandler")
+	if o.ApiversionGetAPIVersionHandler == nil {
+		unregistered = append(unregistered, "apiversion.GetAPIVersionHandler")
+	}
+
+	if o.BlogGetBlogHandler == nil {
+		unregistered = append(unregistered, "blog.GetBlogHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -193,8 +205,8 @@ func (o *BunkerhillAPI) ProducersFor(mediaTypes []string) map[string]runtime.Pro
 	for _, mt := range mediaTypes {
 		switch mt {
 
-		case "text/plain":
-			result["text/plain"] = o.TxtProducer
+		case "application/json":
+			result["application/json"] = o.JSONProducer
 
 		}
 
@@ -241,7 +253,12 @@ func (o *BunkerhillAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/blog"] = NewGetBlog(o.context, o.GetBlogHandler)
+	o.handlers["GET"]["/apiversion"] = apiversion.NewGetAPIVersion(o.context, o.ApiversionGetAPIVersionHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/blog"] = blog.NewGetBlog(o.context, o.BlogGetBlogHandler)
 
 }
 

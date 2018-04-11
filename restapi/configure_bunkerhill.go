@@ -12,9 +12,11 @@ import (
 	graceful "github.com/tylerb/graceful"
 
 	"github.com/bbcyyb/bunkerhill/restapi/operations"
+	"github.com/bbcyyb/bunkerhill/restapi/operations/apiversion"
+	"github.com/bbcyyb/bunkerhill/restapi/operations/blog"
 )
 
-//go:generate swagger generate server --target .. --name bunkerhill --spec ../swagger/swagger.yaml
+//go:generate swagger generate server --target .. --name bunkerhill --spec ../swagger/swagger.yaml --exclude-main
 
 func configureFlags(api *operations.BunkerhillAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -32,10 +34,13 @@ func configureAPI(api *operations.BunkerhillAPI) http.Handler {
 
 	api.JSONConsumer = runtime.JSONConsumer()
 
-	api.TxtProducer = runtime.TextProducer()
+	api.JSONProducer = runtime.JSONProducer()
 
-	api.GetBlogHandler = operations.GetBlogHandlerFunc(func(params operations.GetBlogParams) middleware.Responder {
-		return middleware.NotImplemented("operation .GetBlog has not yet been implemented")
+	api.ApiversionGetAPIVersionHandler = apiversion.GetAPIVersionHandlerFunc(func(params apiversion.GetAPIVersionParams) middleware.Responder {
+		return middleware.NotImplemented("operation apiversion.GetAPIVersion has not yet been implemented")
+	})
+	api.BlogGetBlogHandler = blog.GetBlogHandlerFunc(func(params blog.GetBlogParams) middleware.Responder {
+		return middleware.NotImplemented("operation blog.GetBlog has not yet been implemented")
 	})
 
 	api.ServerShutdown = func() {}
