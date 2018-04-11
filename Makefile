@@ -10,20 +10,23 @@ GOGET=$(GOCMD) get
 BIN=$(GOPATH)/bin
 PKG=$(GOPATH)/pkg
 SRC=$(GOPATH)/src
+SERVER=github.com/bbcyyb/bunkerhill/cmd/bunkerhill-server
+
+# App Name
 BINARY_NAME=bunkerhill
 BINARY_UNIX=$(BINARY_NAME)_unix
 
 all: test build
 install:
-	$(GOINSTALL) github.com/bbcyyb/bunkerhill/cmd/bunkerhill-server
+	$(GOINSTALL) $(SERVER)
 build:
-	$(GOBUILD) -o $(BINARY_NAME) -v
+	$(GOBUILD) -o $(BINARY_NAME) -v $(SERVER)
 test:
 	$(GOTEST) -v ./...
 clean:
 	$(GOCLEAN)
-	rm -f $(BINARY_NAME)
-	rm -f $(BINARY_UNIX)
+	rm -f $(BIN)/$(BINARY_NAME)
+	rm -f $(BIN)/$(BINARY_UNIX)
 run:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./...
 	./$(BINARY_NAME)
