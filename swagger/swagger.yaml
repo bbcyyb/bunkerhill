@@ -1,5 +1,3 @@
----
-
 swagger: '2.0'
 basePath: "/api"
 info:
@@ -7,35 +5,107 @@ info:
   description: "RestAPI supporting lifecycle management for blog system named Missouri"
   version: "0.0.1"
 paths:
+  /apiversion:
+    get:
+      tags:
+      - "apiversion"
+      summary: "Return the bunkerhill version"
+      produces:
+      - "application/json"
+      operationId: "getAPIVersion"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/apiversion"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/generic.error'
+      
   /blog:
     get:
       produces:
-      - text/plain
+      - "application/json"
       parameters:
-      - name: name
+      - name: "name"
         required: false
-        type: string
-        in: query
-        description: defaults to World if not given
-      operationId: getBlog
+        type: "string"
+        in: "query"
+        description: "defaults to World if not given"
+      operationId: "getBlog"
       responses:
         200:
-          description: returns all blogs
+          description: "Successful response"
           schema:
-            type: string
-            description: contains the actual blog as plain text
-
+            type: "object"
+            properties:
+              data:
+                $ref: "#/definitions/blogs"
+              paging:
+                $ref: "#/definitions/paging"
+   
 definitions:
   apiversion:
     type: "object"
     properties:
-      apiVersion:
+       apiVersion:
         type: "string"
     required:
-    - apiVersion
+    - "apiVersion"
+  blogs:
+    type: "array"
+    items:
+      $ref: "#/definitions/blog"
+  paging:
+    type: "object"
+    properties:
+      previous:
+        type: "string"
+        format: "uri"
+      next:
+        type: "string"
+        format: "uri"
   blog:
     type: "object"
     properties:
       id:
         type: "integer"
         format: "int32"
+      title:
+        type: "string"
+      body:
+        type: "string"
+      body_html:
+        type: "string"
+      timestamp:
+        type: "string"
+        format: "date-time"
+      author: 
+        $ref: "#/definitions/author"
+      comments:
+        $ref: "#/definitions/comment"
+  author:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+  comment:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+  generic.error:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+  generic.deleteResponse:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      message:
+        type: "string"
