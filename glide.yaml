@@ -1,0 +1,25 @@
+package: github.com/bbcyyb/bunkerhill
+homepage: https://github.com/bbcyyb
+license: MIT
+owners:
+- name: bbcyyb
+  email: bbcyyb@gmail.com
+  homepage: https://github.com/bbcyyb
+import:
+- package: bunkerhill/restapi
+  subpackages:
+  - operations
+- package: github.com/go-openapi/errors
+- package: github.com/go-openapi/loads
+- package: github.com/go-openapi/runtime
+  subpackages:
+  - flagext
+  - middleware
+  - security
+- package: github.com/go-openapi/spec
+- package: github.com/go-openapi/strfmt
+- package: github.com/go-openapi/swag
+- package: github.com/jessevdk/go-flags
+  version: ^1.4.0
+- package: github.com/tylerb/graceful
+  version: ^1.2.15

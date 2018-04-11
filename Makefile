@@ -15,7 +15,7 @@ BINARY_UNIX=$(BINARY_NAME)_unix
 
 all: test build
 install:
-	$(GOINSTALL)
+	$(GOINSTALL) github.com/bbcyyb/bunkerhill/cmd/bunkerhill-server
 build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 test:
