@@ -1,7 +1,7 @@
 swagger: '2.0'
 basePath: "/api"
 info:
-  title: "Bunker Hill"
+  title: "Bunker Hill a"
   description: "RestAPI supporting lifecycle management for blog system named Missouri"
   version: "0.0.1"
 tags:
