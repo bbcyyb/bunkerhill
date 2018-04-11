@@ -1,14 +1,5 @@
 package: github.com/bbcyyb/bunkerhill
-homepage: https://github.com/bbcyyb
-license: MIT
-owners:
-- name: bbcyyb
-  email: bbcyyb@gmail.com
-  homepage: https://github.com/bbcyyb
 import:
-- package: bunkerhill/restapi
-  subpackages:
-  - operations
 - package: github.com/go-openapi/errors
 - package: github.com/go-openapi/loads
 - package: github.com/go-openapi/runtime

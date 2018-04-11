@@ -21,7 +21,7 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	graceful "github.com/tylerb/graceful"
 
-	"github.com/bbcyyb/bunkerhill/src/bunkerhill/restapi/operations"
+	"github.com/bbcyyb/bunkerhill/restapi/operations"
 )
 
 const (
