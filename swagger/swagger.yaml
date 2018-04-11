@@ -1,9 +1,11 @@
 ---
 
 swagger: '2.0'
+basePath: "/api"
 info:
-  version: 0.0.1
-  title: Bunker Hill
+  title: "Bunker Hill"
+  description: "RestAPI supporting lifecycle management for blog system named Missouri"
+  version: "0.0.1"
 paths:
   /blog:
     get:
@@ -22,3 +24,18 @@ paths:
           schema:
             type: string
             description: contains the actual blog as plain text
+
+definitions:
+  apiversion:
+    type: "object"
+    properties:
+      apiVersion:
+        type: "string"
+    required:
+    - apiVersion
+  blog:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
