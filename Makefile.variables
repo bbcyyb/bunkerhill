@@ -1,0 +1,23 @@
+nosudo = $(shell docker version > /dev/null 2>&1 && echo 1)
+ifeq ($(nosudo),1)
+	DOCKER := docker
+else
+	DOCKER := sudo docker
+endif
+
+# Basic go commands
+GOCMD :=go
+GOINSTALL := $(GOCMD) install
+GOBUILD := $(GOCMD) build
+GOCLEAN := $(GOCMD) clean
+GOTEST := $(GOCMD) test
+GOGET := $(GOCMD) get
+
+# Basic path
+BIN := $(GOPATH)/bin
+PKG := $(GOPATH)/pkg
+SRC:= $(GOPATH)/src
+SERVER := github.com/bbcyyb/bunkerhill/cmd/bunkerhill-server
+
+export PROJECT = bunkerhill
+BINARY_NAME := bunkerhill-server
