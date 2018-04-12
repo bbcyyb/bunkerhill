@@ -17,6 +17,13 @@ build:
 regen:
 	$(SWAGGERGEN) server --target $(SRC)/$(PROJECT_PATH) --name $(PROJECT_NAME) --spec $(SRC)/$(PROJECT_PATH)/swagger/swagger.yaml --exclude-main
 
+.PHONY: vendor
+vendor:
+	rm -f $(SRC)/$(PROJECT_PATH)/glide.yaml
+	rm -f $(SRC)/$(PROJECT_PATH)/glide.lock
+	glide init
+	glide install
+
 .PHONY: test
 test:
 	$(GOTEST) -v ./...
@@ -26,7 +33,6 @@ clean:
 	$(GOCLEAN)
 	rm -f $(BIN)/$(BINARY_NAME)
 
-.PHONY: run
-run:
-	$(GOBUILD) -o $(BINARY_NAME) -v ./...
-	./$(BINARY_NAME)
+.PHONY: dev 
+dev: clean install
+	$(BIN)/$(BINARY_NAME) --host 10.62.59.210 --port 3000

@@ -8,7 +8,6 @@ import (
 
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
-	middleware "github.com/go-openapi/runtime/middleware"
 	graceful "github.com/tylerb/graceful"
 
 	"github.com/bbcyyb/bunkerhill/handlers/apiversion_imp"

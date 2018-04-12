@@ -1,5 +1,5 @@
 swagger: '2.0'
-basePath: "/api"
+basePath: "/api/v1"
 info:
   title: "Bunker Hill"
   description: "RestAPI supporting lifecycle management for blog system named Missouri"
@@ -22,7 +22,10 @@ paths:
         200:
           description: "Successful response"
           schema:
-            $ref: "#/definitions/apiversion"
+              type: "object"
+              properties:
+                data:
+                  $ref: "#/definitions/apiversion"
         500:
           description: "Internal Server Error"
           schema:

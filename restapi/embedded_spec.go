@@ -24,7 +24,7 @@ func init() {
     "title": "Bunker Hill",
     "version": "0.0.1"
   },
-  "basePath": "/api",
+  "basePath": "/api/v1",
   "paths": {
     "/apiversion": {
       "get": {
@@ -40,7 +40,12 @@ func init() {
           "200": {
             "description": "Successful response",
             "schema": {
-              "$ref": "#/definitions/apiversion"
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/apiversion"
+                }
+              }
             }
           },
           "500": {
@@ -203,7 +208,7 @@ func init() {
     "title": "Bunker Hill",
     "version": "0.0.1"
   },
-  "basePath": "/api",
+  "basePath": "/api/v1",
   "paths": {
     "/apiversion": {
       "get": {
@@ -219,7 +224,7 @@ func init() {
           "200": {
             "description": "Successful response",
             "schema": {
-              "$ref": "#/definitions/apiversion"
+              "$ref": "#/definitions/getApiVersionOKBody"
             }
           },
           "500": {
@@ -341,6 +346,15 @@ func init() {
           "type": "string"
         }
       }
+    },
+    "getApiVersionOKBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/apiversion"
+        }
+      },
+      "x-go-gen-location": "operations"
     },
     "getBlogOKBody": {
       "type": "object",

@@ -25,7 +25,7 @@ type GetAPIVersionOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Apiversion `json:"body,omitempty"`
+	Payload *models.GetAPIVersionOKBody `json:"body,omitempty"`
 }
 
 // NewGetAPIVersionOK creates GetAPIVersionOK with default headers values
@@ -35,13 +35,13 @@ func NewGetAPIVersionOK() *GetAPIVersionOK {
 }
 
 // WithPayload adds the payload to the get Api version o k response
-func (o *GetAPIVersionOK) WithPayload(payload *models.Apiversion) *GetAPIVersionOK {
+func (o *GetAPIVersionOK) WithPayload(payload *models.GetAPIVersionOKBody) *GetAPIVersionOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get Api version o k response
-func (o *GetAPIVersionOK) SetPayload(payload *models.Apiversion) {
+func (o *GetAPIVersionOK) SetPayload(payload *models.GetAPIVersionOKBody) {
 	o.Payload = payload
 }
 

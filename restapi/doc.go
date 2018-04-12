@@ -8,7 +8,7 @@ RestAPI supporting lifecycle management for blog system named Missouri
     Schemes:
       http
     Host: localhost
-    BasePath: /api
+    BasePath: /api/v1
     Version: 0.0.1
 
     Consumes:
