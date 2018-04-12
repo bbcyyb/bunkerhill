@@ -11,6 +11,8 @@ import (
 	middleware "github.com/go-openapi/runtime/middleware"
 	graceful "github.com/tylerb/graceful"
 
+	"github.com/bbcyyb/bunkerhill/handlers/apiversion_imp"
+	"github.com/bbcyyb/bunkerhill/handlers/blog_imp"
 	"github.com/bbcyyb/bunkerhill/restapi/operations"
 	"github.com/bbcyyb/bunkerhill/restapi/operations/apiversion"
 	"github.com/bbcyyb/bunkerhill/restapi/operations/blog"
@@ -36,12 +38,8 @@ func configureAPI(api *operations.BunkerhillAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	api.ApiversionGetAPIVersionHandler = apiversion.GetAPIVersionHandlerFunc(func(params apiversion.GetAPIVersionParams) middleware.Responder {
-		return middleware.NotImplemented("operation apiversion.GetAPIVersion has not yet been implemented")
-	})
-	api.BlogGetBlogHandler = blog.GetBlogHandlerFunc(func(params blog.GetBlogParams) middleware.Responder {
-		return middleware.NotImplemented("operation blog.GetBlog has not yet been implemented")
-	})
+	api.ApiversionGetAPIVersionHandler = apiversion.GetAPIVersionHandlerFunc(apiversion_imp.GetAPIVersion)
+	api.BlogGetBlogHandler = blog.GetBlogHandlerFunc(blog_imp.GetBlog)
 
 	api.ServerShutdown = func() {}
 

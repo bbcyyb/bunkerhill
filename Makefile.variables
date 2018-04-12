@@ -13,11 +13,16 @@ GOCLEAN := $(GOCMD) clean
 GOTEST := $(GOCMD) test
 GOGET := $(GOCMD) get
 
+# go-swagger commands
+SWAGGERGEN := swagger generate
+
 # Basic path
 BIN := $(GOPATH)/bin
 PKG := $(GOPATH)/pkg
 SRC:= $(GOPATH)/src
-SERVER := github.com/bbcyyb/bunkerhill/cmd/bunkerhill-server
+PROJECT_PATH := github.com/bbcyyb/bunkerhill
+SERVER_PATH := $(PROJECT_PATH)/cmd/bunkerhill-server
 
-export PROJECT = bunkerhill
+export PROJECT_NAME = bunkerhill
 BINARY_NAME := bunkerhill-server
+
