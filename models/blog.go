@@ -26,8 +26,8 @@ type Blog struct {
 	// body html
 	BodyHTML string `json:"body_html,omitempty"`
 
-	// comments
-	Comments *Comment `json:"comments,omitempty"`
+	// comment ids
+	CommentIds []int32 `json:"comment_ids"`
 
 	// id
 	ID int32 `json:"id,omitempty"`
@@ -48,7 +48,7 @@ func (m *Blog) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateComments(formats); err != nil {
+	if err := m.validateCommentIds(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -84,21 +84,10 @@ func (m *Blog) validateAuthor(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Blog) validateComments(formats strfmt.Registry) error {
+func (m *Blog) validateCommentIds(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Comments) { // not required
+	if swag.IsZero(m.CommentIds) { // not required
 		return nil
-	}
-
-	if m.Comments != nil {
-
-		if err := m.Comments.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("comments")
-			}
-			return err
-		}
-
 	}
 
 	return nil

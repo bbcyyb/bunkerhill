@@ -10,23 +10,82 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // Comment comment
 // swagger:model comment
 type Comment struct {
 
+	// author
+	Author *Author `json:"author,omitempty"`
+
+	// body
+	Body string `json:"body,omitempty"`
+
+	// body html
+	BodyHTML string `json:"body_html,omitempty"`
+
 	// id
 	ID int32 `json:"id,omitempty"`
+
+	// post id
+	PostID int32 `json:"post_id,omitempty"`
+
+	// timestamp
+	Timestamp strfmt.DateTime `json:"timestamp,omitempty"`
 }
 
 // Validate validates this comment
 func (m *Comment) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAuthor(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateTimestamp(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Comment) validateAuthor(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Author) { // not required
+		return nil
+	}
+
+	if m.Author != nil {
+
+		if err := m.Author.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("author")
+			}
+			return err
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Comment) validateTimestamp(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Timestamp) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("timestamp", "body", "date-time", m.Timestamp.String(), formats); err != nil {
+		return err
+	}
+
 	return nil
 }
 

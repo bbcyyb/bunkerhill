@@ -126,8 +126,12 @@ func init() {
         "body_html": {
           "type": "string"
         },
-        "comments": {
-          "$ref": "#/definitions/comment"
+        "comment_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
         },
         "id": {
           "type": "integer",
@@ -151,9 +155,26 @@ func init() {
     "comment": {
       "type": "object",
       "properties": {
+        "author": {
+          "$ref": "#/definitions/author"
+        },
+        "body": {
+          "type": "string"
+        },
+        "body_html": {
+          "type": "string"
+        },
         "id": {
           "type": "integer",
           "format": "int32"
+        },
+        "post_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
@@ -297,8 +318,12 @@ func init() {
         "body_html": {
           "type": "string"
         },
-        "comments": {
-          "$ref": "#/definitions/comment"
+        "comment_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
         },
         "id": {
           "type": "integer",
@@ -322,9 +347,26 @@ func init() {
     "comment": {
       "type": "object",
       "properties": {
+        "author": {
+          "$ref": "#/definitions/author"
+        },
+        "body": {
+          "type": "string"
+        },
+        "body_html": {
+          "type": "string"
+        },
         "id": {
           "type": "integer",
           "format": "int32"
+        },
+        "post_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

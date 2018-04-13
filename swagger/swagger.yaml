@@ -93,8 +93,11 @@ definitions:
         format: "date-time"
       author: 
         $ref: "#/definitions/author"
-      comments:
-        $ref: "#/definitions/comment"
+      comment_ids:
+          type: "array"
+          items:
+              type: "integer"
+              format: "int32"
   author:
     type: "object"
     properties:
@@ -107,6 +110,18 @@ definitions:
       id:
         type: "integer"
         format: "int32"
+      body:
+        type: "string"
+      body_html:
+        type: "string"
+      timestamp:
+        type: "string"
+        format: "date-time"
+      post_id:
+        type: "integer"
+        format: "int32"
+      author:
+        $ref: "#/definitions/author"
   generic.error:
     type: "object"
     properties:

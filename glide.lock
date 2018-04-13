@@ -1,5 +1,5 @@
-hash: 668d472750da7e62d991c3db391009edf3a902ee592219fa0ea0acc5d3516bcb
-updated: 2018-04-12T15:17:55.283970141+08:00
+hash: ee390879ebab41f0773fe2812fb1708e53f8af66d1c442e1614e46df042fb771
+updated: 2018-04-13T14:40:38.390117505+08:00
 imports:
 - name: github.com/asaskevich/govalidator
   version: 7d2e70ef918f16bd6455529af38304d6d025c952
@@ -67,6 +67,8 @@ imports:
   subpackages:
   - bson
   - internal/json
+  - internal/sasl
+  - internal/scram
 - name: gopkg.in/yaml.v2
   version: 5420a8b6744d3b0345ab293f6fcba19c978f1183
 testImports: []

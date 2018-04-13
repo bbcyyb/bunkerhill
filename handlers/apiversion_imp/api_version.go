@@ -2,7 +2,6 @@ package apiversion_imp
 
 import (
 	"io/ioutil"
-	"log"
 	"os"
 	"strings"
 
@@ -16,8 +15,6 @@ func GetAPIVersion(params apiversion.GetAPIVersionParams) middleware.Responder {
 	err_payload := &models.GenericError{
 		Message: "api version file not found or could not be read",
 	}
-
-	log.Println(params)
 
 	if file, err := os.Open("version/version"); err == nil {
 		if data, err := ioutil.ReadAll(file); err == nil {

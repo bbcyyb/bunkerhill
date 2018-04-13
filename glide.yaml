@@ -15,3 +15,6 @@ import:
   version: ~1.4.0
 - package: github.com/tylerb/graceful
   version: ~1.2.15
+- package: gopkg.in/mgo.v2
+  subpackages:
+  - bson
