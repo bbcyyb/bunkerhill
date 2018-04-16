@@ -38,8 +38,11 @@ func Insert(b *Blog) (string, error) {
 func Update(query bson.M, change bson.M) err {
 }
 
+func Remove(selector bson.M) err {
+
+}
+
 func Search(
-	collectionName string,
 	query bson.M, sort string,
 	fields bson.M,
 	skip int,
