@@ -1,9 +1,6 @@
 package storage
 
 import (
-	"log"
-
-	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -29,18 +26,22 @@ func (b *Blog) NewBlog() *Blog {
 	return &Blog{}
 }
 
-func (b *Blog) getAll() ([]Blog, error) {
-	session, err := mgo.Dial("mongodb://10.62.59.210:27017")
-	if err != nil {
-		panic(err)
-	}
-	defer session.Close()
+func GetById(id string) (*Blog, error) {
+}
 
-	c := session.DB("bunkerhill").C("blog")
-	iter := c.Find().Iter()
+func Get() ([]Blog, error) {
+}
 
-	blog := Blog{}
-	for iter.Next(&blog) {
-	}
-	return nil, error()
+func Insert(b *Blog) (string, error) {
+}
+
+func Update(query bson.M, change bson.M) err {
+}
+
+func Search(
+	collectionName string,
+	query bson.M, sort string,
+	fields bson.M,
+	skip int,
+	limit int) (results []interface{}, err error) {
 }
