@@ -56,3 +56,47 @@ func (o *GetBlogOK) WriteResponse(rw http.ResponseWriter, producer runtime.Produ
 		}
 	}
 }
+
+// GetBlogInternalServerErrorCode is the HTTP code returned for type GetBlogInternalServerError
+const GetBlogInternalServerErrorCode int = 500
+
+/*GetBlogInternalServerError Internal Server Error
+
+swagger:response getBlogInternalServerError
+*/
+type GetBlogInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.GenericError `json:"body,omitempty"`
+}
+
+// NewGetBlogInternalServerError creates GetBlogInternalServerError with default headers values
+func NewGetBlogInternalServerError() *GetBlogInternalServerError {
+
+	return &GetBlogInternalServerError{}
+}
+
+// WithPayload adds the payload to the get blog internal server error response
+func (o *GetBlogInternalServerError) WithPayload(payload *models.GenericError) *GetBlogInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get blog internal server error response
+func (o *GetBlogInternalServerError) SetPayload(payload *models.GenericError) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *GetBlogInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(500)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

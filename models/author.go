@@ -17,7 +17,7 @@ import (
 type Author struct {
 
 	// id
-	ID int32 `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 }
 
 // Validate validates this author

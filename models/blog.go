@@ -10,7 +10,6 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // Blog blog
@@ -27,13 +26,13 @@ type Blog struct {
 	BodyHTML string `json:"body_html,omitempty"`
 
 	// comment ids
-	CommentIds []int32 `json:"comment_ids"`
+	CommentIds []string `json:"comment_ids"`
 
 	// id
-	ID int32 `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	// timestamp
-	Timestamp strfmt.DateTime `json:"timestamp,omitempty"`
+	Timestamp string `json:"timestamp,omitempty"`
 
 	// title
 	Title string `json:"title,omitempty"`
@@ -49,11 +48,6 @@ func (m *Blog) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCommentIds(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateTimestamp(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -88,19 +82,6 @@ func (m *Blog) validateCommentIds(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.CommentIds) { // not required
 		return nil
-	}
-
-	return nil
-}
-
-func (m *Blog) validateTimestamp(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Timestamp) { // not required
-		return nil
-	}
-
-	if err := validate.FormatOf("timestamp", "body", "date-time", m.Timestamp.String(), formats); err != nil {
-		return err
 	}
 
 	return nil

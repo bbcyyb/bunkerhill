@@ -17,7 +17,7 @@ paths:
       summary: "Return the bunkerhill version"
       produces:
       - "application/json"
-      operationId: "getAPIVersion"
+      operationId: "GetAPIVersion"
       responses:
         200:
           description: "Successful response"
@@ -29,9 +29,8 @@ paths:
         500:
           description: "Internal Server Error"
           schema:
-            $ref: '#/definitions/generic.error'
-      
-  /blog:
+            $ref: "#/definitions/generic.error"
+  /blogs:
     get:
       tags:
       - "blog"
@@ -43,18 +42,127 @@ paths:
         type: "string"
         in: "query"
         description: "defaults to World if not given"
-      operationId: "getBlog"
+      operationId: "GetBlogs"
       responses:
         200:
           description: "Successful response"
           schema:
             type: "object"
             properties:
-              data:
+              schema:
                 $ref: "#/definitions/blogs"
-              paging:
-                $ref: "#/definitions/paging"
-   
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/generic.error"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/generic.error"
+    post:
+      tags:
+      - "blog"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "blog"
+      in: "body"
+      description: "Content of blog to be saved"
+      required: true
+      schema:
+        $ref: "#/definitions/blog"
+      operationId: "InsertBlog"
+      responses:
+        201:
+          description: "The request has been fulfilled, resulting in the creation of a new resource."
+          schema: "#/definitions/blog"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/generic.error"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/generic.error"
+  /blogs/{blogId}:
+    get:
+      targs:
+      - "blog"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "blogId"
+        description: "Id of the blog to return"
+        required: true
+        type: "string"
+        in: "path"
+      operationId: "GetBlogById"
+      responses:
+        200:
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/blog"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/generic.error"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/generic.error"
+    put:
+      tags:
+      - "blog"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "blogId"
+        description: "Id of the blog to update"
+        required: true
+        type: "string"
+        in: "path" 
+      - name: "blog"
+        description: "Content of blog to be saved"
+        required: true
+        in: "body"
+        schema:
+          $ref: "#/definitions/blog"
+      operationId: "UpdateBlog"
+      responses:
+        200:
+          description: "Successful response"
+          schema: "#/definitions/blog"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/generic.error"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/generic.error"
+    delete:
+      tags:
+      - "blog"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "blogId"
+        description: "Id of the blog to delete"
+        required: true
+        type: "string"
+        in: "path" 
+      operationId: "DeleteBlog"
+      responses:
+        200:
+          description: "Successful response"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/generic.error"
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/generic.error"
 definitions:
   apiversion:
     type: "object"
@@ -64,9 +172,11 @@ definitions:
     required:
     - "apiVersion"
   blogs:
-    type: "array"
-    items:
-      $ref: "#/definitions/blog"
+    type: "object"
+    properties:
+      type: "array"
+      items:
+        $ref: "#/definitions/blog"
   paging:
     type: "object"
     properties:
@@ -80,8 +190,7 @@ definitions:
     type: "object"
     properties:
       id:
-        type: "integer"
-        format: "int32"
+        type: "string"
       title:
         type: "string"
       body:
@@ -90,26 +199,22 @@ definitions:
         type: "string"
       timestamp:
         type: "string"
-        format: "date-time"
       author: 
         $ref: "#/definitions/author"
       comment_ids:
           type: "array"
           items:
-              type: "integer"
-              format: "int32"
+              type: "string"
   author:
     type: "object"
     properties:
       id:
-        type: "integer"
-        format: "int32"
+        type: "string"
   comment:
     type: "object"
     properties:
       id:
-        type: "integer"
-        format: "int32"
+        type: "string"
       body:
         type: "string"
       body_html:

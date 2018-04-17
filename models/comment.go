@@ -27,7 +27,7 @@ type Comment struct {
 	BodyHTML string `json:"body_html,omitempty"`
 
 	// id
-	ID int32 `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 
 	// post id
 	PostID int32 `json:"post_id,omitempty"`

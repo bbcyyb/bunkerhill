@@ -88,6 +88,12 @@ func init() {
                 }
               }
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
           }
         }
       }
@@ -109,8 +115,7 @@ func init() {
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         }
       }
     },
@@ -129,17 +134,14 @@ func init() {
         "comment_ids": {
           "type": "array",
           "items": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string"
           }
         },
         "id": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "timestamp": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "title": {
           "type": "string"
@@ -165,8 +167,7 @@ func init() {
           "type": "string"
         },
         "id": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "post_id": {
           "type": "integer",
@@ -280,6 +281,12 @@ func init() {
             "schema": {
               "$ref": "#/definitions/getBlogOKBody"
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
           }
         }
       }
@@ -301,8 +308,7 @@ func init() {
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         }
       }
     },
@@ -321,17 +327,14 @@ func init() {
         "comment_ids": {
           "type": "array",
           "items": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string"
           }
         },
         "id": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "timestamp": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "title": {
           "type": "string"
@@ -357,8 +360,7 @@ func init() {
           "type": "string"
         },
         "id": {
-          "type": "integer",
-          "format": "int32"
+          "type": "string"
         },
         "post_id": {
           "type": "integer",

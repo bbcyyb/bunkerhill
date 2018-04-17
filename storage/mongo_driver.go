@@ -3,6 +3,7 @@ package storage
 import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"log"
 )
 
 type MongoDoc struct {
@@ -12,7 +13,7 @@ type MongoDoc struct {
 var (
 	mgoSession *mgo.Session
 	database   = "bunkerhill"
-	URL        = "mongodb://10.62.59.210:27017"
+	URL        = "mongodb://127.0.0.1:27017"
 )
 
 func getSession() *mgo.Session {
@@ -20,6 +21,7 @@ func getSession() *mgo.Session {
 		var err error
 		mgoSession, err = mgo.Dial(URL)
 		if err != nil {
+			log.Println(err.Error())
 			panic(err)
 		}
 	}
@@ -60,7 +62,8 @@ func Get(collection string) ([]interface{}, error) {
 	return result, nil
 }
 
-func Insert(collection string, doc *MongoDoc) (string, error) {
+func Insert(collection string, d interface{}) (string, error) {
+	doc := d.(*MongoDoc)
 	doc.ID = bson.NewObjectId()
 	operation := func(c *mgo.Collection) error {
 		return c.Insert(*doc)

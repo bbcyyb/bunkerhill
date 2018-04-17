@@ -16,39 +16,43 @@ type Blog struct {
 
 	Timestamp string `bson:"timestamp"`
 
-	CommentIds []int32 `bson:"commitids"`
+	CommentIds []string `bson:"commitids"`
 
-	AuthorId []int32 `bson:"authorid"`
+	AuthorId []string `bson:"authorid"`
 }
 
 var (
 	collection = "blog"
 )
 
-func (b *Blog) NewBlog() *Blog {
+func NewBlog() *Blog {
 	return &Blog{}
 }
 
-func () GetById(id string) (*Blog, error) {
+func GetById(id string) (*Blog, error) {
 	blog, err := storage.GetById(collection, id)
 	return blog.(*Blog), err
 }
 
 func GetBlogAll() ([]Blog, error) {
-	blogs, err := storage.Get(collection)
-	return blogs.([]Blog), err
+	var blogs []Blog
+	docs, err := storage.Get(collection)
+	for _, doc := range docs {
+		blogs = append(blogs, doc.(Blog))
+	}
+	return blogs, err
 }
 
 func Insert(b *Blog) (string, error) {
 	return storage.Insert(collection, b)
 }
 
-func (b *Blog) Update(change bson.M) err {
-	query = bson.M{"_id", b.ID}
+func (b *Blog) Update(change bson.M) error {
+	query := bson.M{"_id": b.ID}
 	return storage.Update(collection, query, change)
 }
 
-func Remove(selector bson.M) err {
+func Remove(selector bson.M) error {
 	return storage.Remove(collection, selector)
 }
 
