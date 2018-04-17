@@ -66,16 +66,17 @@ paths:
       - "application/json"
       parameters:
       - name: "blog"
-      in: "body"
-      description: "Content of blog to be saved"
-      required: true
-      schema:
-        $ref: "#/definitions/blog"
+        in: "body"
+        description: "Content of blog to be saved"
+        required: true
+        schema:
+          $ref: "#/definitions/blog"
       operationId: "InsertBlog"
       responses:
         201:
           description: "The request has been fulfilled, resulting in the creation of a new resource."
-          schema: "#/definitions/blog"
+          schema:
+            $ref: "#/definitions/blog"
         400:
           description: "Bad Request"
           schema:
@@ -86,7 +87,7 @@ paths:
             $ref: "#/definitions/generic.error"
   /blogs/{blogId}:
     get:
-      targs:
+      tags:
       - "blog"
       produces:
       - "application/json"
@@ -131,7 +132,8 @@ paths:
       responses:
         200:
           description: "Successful response"
-          schema: "#/definitions/blog"
+          schema: 
+            $ref: "#/definitions/blog"
         400:
           description: "Bad Request"
           schema:
@@ -172,11 +174,9 @@ definitions:
     required:
     - "apiVersion"
   blogs:
-    type: "object"
-    properties:
-      type: "array"
-      items:
-        $ref: "#/definitions/blog"
+    type: "array"
+    items:
+      $ref: "#/definitions/blog"
   paging:
     type: "object"
     properties:

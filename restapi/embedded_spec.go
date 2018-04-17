@@ -35,7 +35,7 @@ func init() {
           "apiversion"
         ],
         "summary": "Return the bunkerhill version",
-        "operationId": "getAPIVersion",
+        "operationId": "GetAPIVersion",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -57,7 +57,7 @@ func init() {
         }
       }
     },
-    "/blog": {
+    "/blogs": {
       "get": {
         "produces": [
           "application/json"
@@ -65,7 +65,7 @@ func init() {
         "tags": [
           "blog"
         ],
-        "operationId": "getBlog",
+        "operationId": "GetBlogs",
         "parameters": [
           {
             "type": "string",
@@ -80,13 +80,178 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
-                "data": {
+                "schema": {
                   "$ref": "#/definitions/blogs"
-                },
-                "paging": {
-                  "$ref": "#/definitions/paging"
                 }
               }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          }
+        }
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "blog"
+        ],
+        "operationId": "InsertBlog",
+        "parameters": [
+          {
+            "description": "Content of blog to be saved",
+            "name": "blog",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The request has been fulfilled, resulting in the creation of a new resource.",
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          }
+        }
+      }
+    },
+    "/blogs/{blogId}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "blog"
+        ],
+        "operationId": "GetBlogById",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Id of the blog to return",
+            "name": "blogId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          }
+        }
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "blog"
+        ],
+        "operationId": "UpdateBlog",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Id of the blog to update",
+            "name": "blogId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Content of blog to be saved",
+            "name": "blog",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "blog"
+        ],
+        "operationId": "DeleteBlog",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Id of the blog to delete",
+            "name": "blogId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
             }
           },
           "500": {
@@ -241,7 +406,7 @@ func init() {
           "apiversion"
         ],
         "summary": "Return the bunkerhill version",
-        "operationId": "getAPIVersion",
+        "operationId": "GetAPIVersion",
         "responses": {
           "200": {
             "description": "Successful response",
@@ -258,7 +423,7 @@ func init() {
         }
       }
     },
-    "/blog": {
+    "/blogs": {
       "get": {
         "produces": [
           "application/json"
@@ -266,7 +431,7 @@ func init() {
         "tags": [
           "blog"
         ],
-        "operationId": "getBlog",
+        "operationId": "GetBlogs",
         "parameters": [
           {
             "type": "string",
@@ -279,7 +444,175 @@ func init() {
           "200": {
             "description": "Successful response",
             "schema": {
-              "$ref": "#/definitions/getBlogOKBody"
+              "$ref": "#/definitions/getBlogsOKBody"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          }
+        }
+      },
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "blog"
+        ],
+        "operationId": "InsertBlog",
+        "parameters": [
+          {
+            "description": "Content of blog to be saved",
+            "name": "blog",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The request has been fulfilled, resulting in the creation of a new resource.",
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          }
+        }
+      }
+    },
+    "/blogs/{blogId}": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "blog"
+        ],
+        "operationId": "GetBlogById",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Id of the blog to return",
+            "name": "blogId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          }
+        }
+      },
+      "put": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "blog"
+        ],
+        "operationId": "UpdateBlog",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Id of the blog to update",
+            "name": "blogId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Content of blog to be saved",
+            "name": "blog",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/blog"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "blog"
+        ],
+        "operationId": "DeleteBlog",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Id of the blog to delete",
+            "name": "blogId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/generic.error"
             }
           },
           "500": {
@@ -400,14 +733,11 @@ func init() {
       },
       "x-go-gen-location": "operations"
     },
-    "getBlogOKBody": {
+    "getBlogsOKBody": {
       "type": "object",
       "properties": {
-        "data": {
+        "schema": {
           "$ref": "#/definitions/blogs"
-        },
-        "paging": {
-          "$ref": "#/definitions/paging"
         }
       },
       "x-go-gen-location": "operations"

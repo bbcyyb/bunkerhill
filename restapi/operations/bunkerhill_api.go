@@ -40,11 +40,23 @@ func NewBunkerhillAPI(spec *loads.Document) *BunkerhillAPI {
 		BearerAuthenticator: security.BearerAuth,
 		JSONConsumer:        runtime.JSONConsumer(),
 		JSONProducer:        runtime.JSONProducer(),
+		BlogDeleteBlogHandler: blog.DeleteBlogHandlerFunc(func(params blog.DeleteBlogParams) middleware.Responder {
+			return middleware.NotImplemented("operation BlogDeleteBlog has not yet been implemented")
+		}),
 		ApiversionGetAPIVersionHandler: apiversion.GetAPIVersionHandlerFunc(func(params apiversion.GetAPIVersionParams) middleware.Responder {
 			return middleware.NotImplemented("operation ApiversionGetAPIVersion has not yet been implemented")
 		}),
-		BlogGetBlogHandler: blog.GetBlogHandlerFunc(func(params blog.GetBlogParams) middleware.Responder {
-			return middleware.NotImplemented("operation BlogGetBlog has not yet been implemented")
+		BlogGetBlogByIDHandler: blog.GetBlogByIDHandlerFunc(func(params blog.GetBlogByIDParams) middleware.Responder {
+			return middleware.NotImplemented("operation BlogGetBlogByID has not yet been implemented")
+		}),
+		BlogGetBlogsHandler: blog.GetBlogsHandlerFunc(func(params blog.GetBlogsParams) middleware.Responder {
+			return middleware.NotImplemented("operation BlogGetBlogs has not yet been implemented")
+		}),
+		BlogInsertBlogHandler: blog.InsertBlogHandlerFunc(func(params blog.InsertBlogParams) middleware.Responder {
+			return middleware.NotImplemented("operation BlogInsertBlog has not yet been implemented")
+		}),
+		BlogUpdateBlogHandler: blog.UpdateBlogHandlerFunc(func(params blog.UpdateBlogParams) middleware.Responder {
+			return middleware.NotImplemented("operation BlogUpdateBlog has not yet been implemented")
 		}),
 	}
 }
@@ -77,10 +89,18 @@ type BunkerhillAPI struct {
 	// JSONProducer registers a producer for a "application/json" mime type
 	JSONProducer runtime.Producer
 
+	// BlogDeleteBlogHandler sets the operation handler for the delete blog operation
+	BlogDeleteBlogHandler blog.DeleteBlogHandler
 	// ApiversionGetAPIVersionHandler sets the operation handler for the get API version operation
 	ApiversionGetAPIVersionHandler apiversion.GetAPIVersionHandler
-	// BlogGetBlogHandler sets the operation handler for the get blog operation
-	BlogGetBlogHandler blog.GetBlogHandler
+	// BlogGetBlogByIDHandler sets the operation handler for the get blog by Id operation
+	BlogGetBlogByIDHandler blog.GetBlogByIDHandler
+	// BlogGetBlogsHandler sets the operation handler for the get blogs operation
+	BlogGetBlogsHandler blog.GetBlogsHandler
+	// BlogInsertBlogHandler sets the operation handler for the insert blog operation
+	BlogInsertBlogHandler blog.InsertBlogHandler
+	// BlogUpdateBlogHandler sets the operation handler for the update blog operation
+	BlogUpdateBlogHandler blog.UpdateBlogHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -144,12 +164,28 @@ func (o *BunkerhillAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
+	if o.BlogDeleteBlogHandler == nil {
+		unregistered = append(unregistered, "blog.DeleteBlogHandler")
+	}
+
 	if o.ApiversionGetAPIVersionHandler == nil {
 		unregistered = append(unregistered, "apiversion.GetAPIVersionHandler")
 	}
 
-	if o.BlogGetBlogHandler == nil {
-		unregistered = append(unregistered, "blog.GetBlogHandler")
+	if o.BlogGetBlogByIDHandler == nil {
+		unregistered = append(unregistered, "blog.GetBlogByIDHandler")
+	}
+
+	if o.BlogGetBlogsHandler == nil {
+		unregistered = append(unregistered, "blog.GetBlogsHandler")
+	}
+
+	if o.BlogInsertBlogHandler == nil {
+		unregistered = append(unregistered, "blog.InsertBlogHandler")
+	}
+
+	if o.BlogUpdateBlogHandler == nil {
+		unregistered = append(unregistered, "blog.UpdateBlogHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -250,6 +286,11 @@ func (o *BunkerhillAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/blogs/{blogId}"] = blog.NewDeleteBlog(o.context, o.BlogDeleteBlogHandler)
+
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -258,7 +299,22 @@ func (o *BunkerhillAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/blog"] = blog.NewGetBlog(o.context, o.BlogGetBlogHandler)
+	o.handlers["GET"]["/blogs/{blogId}"] = blog.NewGetBlogByID(o.context, o.BlogGetBlogByIDHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/blogs"] = blog.NewGetBlogs(o.context, o.BlogGetBlogsHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/blogs"] = blog.NewInsertBlog(o.context, o.BlogInsertBlogHandler)
+
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/blogs/{blogId}"] = blog.NewUpdateBlog(o.context, o.BlogUpdateBlogHandler)
 
 }
 
