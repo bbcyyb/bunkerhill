@@ -17,16 +17,15 @@ https://segmentfault.com/a/1190000007313505
 func GetBlogs(params blog.GetBlogsParams) middleware.Responder {
 	query := make(map[string]interface{})
 	select_ := make(map[string]interface{})
-	prePage := int(*params.PrePage)
-	page := int(*params.Page)
 	var sort []string
 	var skip, limit int
+	var prePage, page int
 
-	if *params.AuthorID != "" {
+	if params.AuthorID != nil {
 		query["authorid"] = *params.AuthorID
 	}
 
-	if *params.Sortby != "" {
+	if params.Sortby != nil {
 		for _, fragment := range strings.Split(*params.Sortby, ",") {
 			var field string
 			if fragment[0] == 43 {
@@ -39,10 +38,18 @@ func GetBlogs(params blog.GetBlogsParams) middleware.Responder {
 		}
 	}
 
-	if *params.Select != "" {
+	if params.Select != nil {
 		for _, field := range strings.Split(*params.Select, ",") {
 			select_[field] = 1
 		}
+	}
+
+	if params.PrePage != nil {
+		prePage = int(*params.PrePage)
+	}
+
+	if params.Page != nil {
+		page = int(*params.Page)
 	}
 
 	if prePage != 0 && page != 0 {
