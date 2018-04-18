@@ -37,11 +37,24 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "name"
+      - name: "title"
         required: false
         type: "string"
         in: "query"
-        description: "defaults to World if not given"
+      - name: "page"
+        required: false
+        type: "integer"
+      - name: "pre_page"
+        required: false
+        type: "integer"
+      - name: "sortby"
+        required: false
+        type: "string"
+        description: "e.g. sortby=+title,-timestamp"
+      - name: "select"
+        required: false
+        type: "string"
+        description: "e.g. select=title,id,body,body_html"
       operationId: "GetBlogs"
       responses:
         200:
