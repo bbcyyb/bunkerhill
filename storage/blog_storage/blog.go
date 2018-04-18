@@ -18,7 +18,7 @@ type Blog struct {
 
 	CommentIds []string `bson:"commitids"`
 
-	AuthorId []string `bson:"authorid"`
+	AuthorId string `bson:"authorid"`
 }
 
 var (
@@ -34,9 +34,9 @@ func GetById(id string) (*Blog, error) {
 	return blog.(*Blog), err
 }
 
-func GetBlogAll() ([]Blog, error) {
+func GetAll() ([]Blog, error) {
 	var blogs []Blog
-	docs, err := storage.Get(collection)
+	docs, err := storage.GetAll(collection)
 	for _, doc := range docs {
 		blogs = append(blogs, doc.(Blog))
 	}
@@ -56,11 +56,11 @@ func Remove(selector bson.M) error {
 	return storage.Remove(collection, selector)
 }
 
-func Search(
-	query bson.M,
-	sort string,
-	fields bson.M,
+func Get(
+	query map[string]interface{},
+	sort []string,
+	fields map[string]interface{},
 	skip int,
 	limit int) (results []interface{}, err error) {
-	return storage.Search(collection, query, sort, fields, skip, limit)
+	return storage.Get(collection, query, sort, fields, skip, limit)
 }

@@ -37,8 +37,15 @@ func configureAPI(api *operations.BunkerhillAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
+	/*
+		Apiversion
+	*/
 	api.ApiversionGetAPIVersionHandler = apiversion.GetAPIVersionHandlerFunc(apiversion_imp.GetAPIVersion)
-	api.BlogGetBlogHandler = blog.GetBlogHandlerFunc(blog_imp.GetBlog)
+	/*
+		Blog
+	*/
+	api.BlogGetBlogsHandler = blog.GetBlogsHandlerFunc(blog_imp.GetBlogs)
+	api.BlogInsertBlogHandler = blog.InsertBlogHandlerFunc(blog_imp.InsertBlog)
 
 	api.ServerShutdown = func() {}
 

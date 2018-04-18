@@ -37,33 +37,36 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "title"
+      - name: "author_id"
         required: false
         type: "string"
         in: "query"
       - name: "page"
         required: false
         type: "integer"
+        format: "int32"
+        in: "query"
       - name: "pre_page"
         required: false
         type: "integer"
+        format: "int32"
+        in: "query"
       - name: "sortby"
         required: false
         type: "string"
+        in: "query"
         description: "e.g. sortby=+title,-timestamp"
       - name: "select"
         required: false
         type: "string"
+        in: "query"
         description: "e.g. select=title,id,body,body_html"
       operationId: "GetBlogs"
       responses:
         200:
           description: "Successful response"
           schema:
-            type: "object"
-            properties:
-              schema:
-                $ref: "#/definitions/blogs"
+            $ref: "#/definitions/blogs"
         400:
           description: "Bad Request"
           schema:

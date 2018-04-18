@@ -25,7 +25,7 @@ type GetBlogsOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.GetBlogsOKBody `json:"body,omitempty"`
+	Payload models.Blogs `json:"body,omitempty"`
 }
 
 // NewGetBlogsOK creates GetBlogsOK with default headers values
@@ -35,13 +35,13 @@ func NewGetBlogsOK() *GetBlogsOK {
 }
 
 // WithPayload adds the payload to the get blogs o k response
-func (o *GetBlogsOK) WithPayload(payload *models.GetBlogsOKBody) *GetBlogsOK {
+func (o *GetBlogsOK) WithPayload(payload models.Blogs) *GetBlogsOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get blogs o k response
-func (o *GetBlogsOK) SetPayload(payload *models.GetBlogsOKBody) {
+func (o *GetBlogsOK) SetPayload(payload models.Blogs) {
 	o.Payload = payload
 }
 
@@ -49,12 +49,15 @@ func (o *GetBlogsOK) SetPayload(payload *models.GetBlogsOKBody) {
 func (o *GetBlogsOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
-	if o.Payload != nil {
-		payload := o.Payload
-		if err := producer.Produce(rw, payload); err != nil {
-			panic(err) // let the recovery middleware deal with this
-		}
+	payload := o.Payload
+	if payload == nil {
+		payload = make(models.Blogs, 0, 50)
 	}
+
+	if err := producer.Produce(rw, payload); err != nil {
+		panic(err) // let the recovery middleware deal with this
+	}
+
 }
 
 // GetBlogsBadRequestCode is the HTTP code returned for type GetBlogsBadRequest

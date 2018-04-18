@@ -9,11 +9,17 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
+
+	"github.com/go-openapi/swag"
 )
 
 // GetBlogsURL generates an URL for the get blogs operation
 type GetBlogsURL struct {
-	Name *string
+	AuthorID *string
+	Page     *int32
+	PrePage  *int32
+	Select   *string
+	Sortby   *string
 
 	_basePath string
 	// avoid unkeyed usage
@@ -49,12 +55,44 @@ func (o *GetBlogsURL) Build() (*url.URL, error) {
 
 	qs := make(url.Values)
 
-	var name string
-	if o.Name != nil {
-		name = *o.Name
+	var authorID string
+	if o.AuthorID != nil {
+		authorID = *o.AuthorID
 	}
-	if name != "" {
-		qs.Set("name", name)
+	if authorID != "" {
+		qs.Set("author_id", authorID)
+	}
+
+	var page string
+	if o.Page != nil {
+		page = swag.FormatInt32(*o.Page)
+	}
+	if page != "" {
+		qs.Set("page", page)
+	}
+
+	var prePage string
+	if o.PrePage != nil {
+		prePage = swag.FormatInt32(*o.PrePage)
+	}
+	if prePage != "" {
+		qs.Set("pre_page", prePage)
+	}
+
+	var selectVar string
+	if o.Select != nil {
+		selectVar = *o.Select
+	}
+	if selectVar != "" {
+		qs.Set("select", selectVar)
+	}
+
+	var sortby string
+	if o.Sortby != nil {
+		sortby = *o.Sortby
+	}
+	if sortby != "" {
+		qs.Set("sortby", sortby)
 	}
 
 	result.RawQuery = qs.Encode()

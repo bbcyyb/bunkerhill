@@ -49,7 +49,7 @@ func GetById(collection string, id string) (interface{}, error) {
 	return &result, nil
 }
 
-func Get(collection string) ([]interface{}, error) {
+func GetAll(collection string) ([]interface{}, error) {
 	var result []interface{}
 	operation := func(c *mgo.Collection) error {
 		return c.Find(nil).All(&result)
@@ -60,6 +60,47 @@ func Get(collection string) ([]interface{}, error) {
 	}
 
 	return result, nil
+}
+
+func Get(
+	collection string,
+	query bson.M,
+	sort []string,
+	fields bson.M,
+	skip int,
+	limit int) (results []interface{}, err error) {
+	operation := func(c *mgo.Collection) error {
+		var q *mgo.Query
+		if len(query) > 0 {
+			q = c.Find(query)
+		} else {
+			q = c.Find(nil)
+		}
+
+		if len(sort) > 0 {
+			q = q.Sort(sort...)
+		}
+
+		if len(fields) > 0 {
+			q = q.Select(fields)
+		}
+
+		if skip > 0 {
+			q = q.Skip(skip)
+		}
+
+		if limit > 0 {
+			q = q.Limit(limit)
+		}
+
+		return q.All(&results)
+	}
+
+	if err = withCollection(collection, operation); err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }
 
 func Insert(collection string, d interface{}) (string, error) {
@@ -94,21 +135,4 @@ func Remove(collection string, selector bson.M) error {
 	}
 
 	return withCollection(collection, operation)
-}
-
-func Search(
-	collection string,
-	query bson.M, sort string,
-	fields bson.M,
-	skip int,
-	limit int) (results []interface{}, err error) {
-	operation := func(c *mgo.Collection) error {
-		return c.Find(query).Sort(sort).Select(fields).Skip(skip).Limit(limit).All(&results)
-	}
-
-	if err = withCollection(collection, operation); err != nil {
-		return nil, err
-	}
-
-	return results, nil
 }

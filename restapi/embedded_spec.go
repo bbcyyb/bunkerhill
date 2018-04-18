@@ -69,8 +69,31 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "defaults to World if not given",
-            "name": "name",
+            "name": "author_id",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "name": "pre_page",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "e.g. sortby=+title,-timestamp",
+            "name": "sortby",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "e.g. select=title,id,body,body_html",
+            "name": "select",
             "in": "query"
           }
         ],
@@ -78,12 +101,7 @@ func init() {
           "200": {
             "description": "Successful response",
             "schema": {
-              "type": "object",
-              "properties": {
-                "schema": {
-                  "$ref": "#/definitions/blogs"
-                }
-              }
+              "$ref": "#/definitions/blogs"
             }
           },
           "400": {
@@ -435,8 +453,31 @@ func init() {
         "parameters": [
           {
             "type": "string",
-            "description": "defaults to World if not given",
-            "name": "name",
+            "name": "author_id",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int32",
+            "name": "pre_page",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "e.g. sortby=+title,-timestamp",
+            "name": "sortby",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "e.g. select=title,id,body,body_html",
+            "name": "select",
             "in": "query"
           }
         ],
@@ -444,7 +485,7 @@ func init() {
           "200": {
             "description": "Successful response",
             "schema": {
-              "$ref": "#/definitions/getBlogsOKBody"
+              "$ref": "#/definitions/blogs"
             }
           },
           "400": {
@@ -729,15 +770,6 @@ func init() {
       "properties": {
         "data": {
           "$ref": "#/definitions/apiversion"
-        }
-      },
-      "x-go-gen-location": "operations"
-    },
-    "getBlogsOKBody": {
-      "type": "object",
-      "properties": {
-        "schema": {
-          "$ref": "#/definitions/blogs"
         }
       },
       "x-go-gen-location": "operations"

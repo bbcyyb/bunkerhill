@@ -11,6 +11,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/swag"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
@@ -31,10 +32,26 @@ type GetBlogsParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*defaults to World if not given
+	/*
 	  In: query
 	*/
-	Name *string
+	AuthorID *string
+	/*
+	  In: query
+	*/
+	Page *int32
+	/*
+	  In: query
+	*/
+	PrePage *int32
+	/*e.g. select=title,id,body,body_html
+	  In: query
+	*/
+	Select *string
+	/*e.g. sortby=+title,-timestamp
+	  In: query
+	*/
+	Sortby *string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -48,8 +65,28 @@ func (o *GetBlogsParams) BindRequest(r *http.Request, route *middleware.MatchedR
 
 	qs := runtime.Values(r.URL.Query())
 
-	qName, qhkName, _ := qs.GetOK("name")
-	if err := o.bindName(qName, qhkName, route.Formats); err != nil {
+	qAuthorID, qhkAuthorID, _ := qs.GetOK("author_id")
+	if err := o.bindAuthorID(qAuthorID, qhkAuthorID, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qPage, qhkPage, _ := qs.GetOK("page")
+	if err := o.bindPage(qPage, qhkPage, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qPrePage, qhkPrePage, _ := qs.GetOK("pre_page")
+	if err := o.bindPrePage(qPrePage, qhkPrePage, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qSelect, qhkSelect, _ := qs.GetOK("select")
+	if err := o.bindSelect(qSelect, qhkSelect, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qSortby, qhkSortby, _ := qs.GetOK("sortby")
+	if err := o.bindSortby(qSortby, qhkSortby, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -59,7 +96,7 @@ func (o *GetBlogsParams) BindRequest(r *http.Request, route *middleware.MatchedR
 	return nil
 }
 
-func (o *GetBlogsParams) bindName(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetBlogsParams) bindAuthorID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -71,7 +108,83 @@ func (o *GetBlogsParams) bindName(rawData []string, hasKey bool, formats strfmt.
 		return nil
 	}
 
-	o.Name = &raw
+	o.AuthorID = &raw
+
+	return nil
+}
+
+func (o *GetBlogsParams) bindPage(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt32(raw)
+	if err != nil {
+		return errors.InvalidType("page", "query", "int32", raw)
+	}
+	o.Page = &value
+
+	return nil
+}
+
+func (o *GetBlogsParams) bindPrePage(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt32(raw)
+	if err != nil {
+		return errors.InvalidType("pre_page", "query", "int32", raw)
+	}
+	o.PrePage = &value
+
+	return nil
+}
+
+func (o *GetBlogsParams) bindSelect(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Select = &raw
+
+	return nil
+}
+
+func (o *GetBlogsParams) bindSortby(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Sortby = &raw
 
 	return nil
 }
