@@ -17,7 +17,7 @@ import (
 type Blog struct {
 
 	// author
-	Author *Author `json:"author,omitempty"`
+	Author *User `json:"author,omitempty"`
 
 	// body
 	Body string `json:"body,omitempty"`

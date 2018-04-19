@@ -3,6 +3,7 @@ package blog_imp
 import (
 	"strings"
 
+	"github.com/bbcyyb/bunkerhill/handlers/user_imp"
 	"github.com/bbcyyb/bunkerhill/models"
 	"github.com/bbcyyb/bunkerhill/restapi/operations/blog"
 	"github.com/bbcyyb/bunkerhill/storage/blog_storage"
@@ -57,39 +58,61 @@ func GetBlogs(params blog.GetBlogsParams) middleware.Responder {
 		limit = prePage
 	}
 
-	blogsSource, err := blog_storage.Get(query, sort, select_, skip, limit)
+	payload, err := blog_storage.Get(query, sort, select_, skip, limit)
 
 	if err != nil {
-		err_payload := &models.GenericError{
-			Message: err.Error(),
-		}
-
-		return blog.NewGetBlogsInternalServerError().WithPayload(err_payload)
-	}
-
-	var payload models.Blogs
-	for _, source := range blogsSource {
-		payload = append(payload, transfer(source.(blog_storage.Blog)))
+		errPayload := generateErrorPayload(err)
+		return blog.NewGetBlogsInternalServerError().WithPayload(errPayload)
 	}
 
 	return blog.NewGetBlogsOK().WithPayload(payload)
 }
 
 func InsertBlog(params blog.InsertBlogParams) middleware.Responder {
-	payload := &models.Blog{}
+	newId, err := blog_storage.Insert(params.Blog)
+
+	if err != nil {
+		errPayload := generateErrorPayload(err)
+		return blog.NewInsertBlogInternalServerError().WithPayload(errPayload)
+	}
+
+	payload := &models.InsertBlogCreatedBody{ID: newId}
+
 	return blog.NewInsertBlogCreated().WithPayload(payload)
 }
 
-func transfer(source blog_storage.Blog) *models.Blog {
-	result := &models.Blog{
-		ID:         source.ID.Hex(),
-		Title:      source.Title,
-		Body:       source.Body,
-		BodyHTML:   source.BodyHTML,
-		Timestamp:  source.Timestamp,
-		CommentIds: source.CommentIds,
-		Author:     nil,
+func UpdateBlog(params blog.UpdateBlogParams) middleware.Responder {
+	id := params.BlogID
+	b := params.Blog
+	var author *models.User
+
+	if b.Author != nil {
+		a, err := user_imp.UpdateUserCore(b.Author.ID, b.Author)
+		if err != nil {
+			errPayload := generateErrorPayload(err)
+			return blog.NewUpdateBlogInternalServerError().WithPayload(errPayload)
+		}
+		author = a
 	}
 
-	return result
+	if err := blog_storage.Update(id, b); err != nil {
+		errPayload := generateErrorPayload(err)
+		return blog.NewUpdateBlogInternalServerError().WithPayload(errPayload)
+	}
+
+	newBlog, err := blog_storage.GetById(id)
+	if err != nil {
+		errPayload := generateErrorPayload(err)
+		return blog.NewUpdateBlogInternalServerError().WithPayload(errPayload)
+	}
+
+	payload := newBlog
+	payload.Author = author
+	return blog.NewUpdateBlogOK().WithPayload(payload)
+}
+
+func generateErrorPayload(err error) *models.GenericError {
+	return &models.GenericError{
+		Message: err.Error(),
+	}
 }

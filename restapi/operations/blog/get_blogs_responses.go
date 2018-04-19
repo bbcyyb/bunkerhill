@@ -25,7 +25,7 @@ type GetBlogsOK struct {
 	/*
 	  In: Body
 	*/
-	Payload models.Blogs `json:"body,omitempty"`
+	Payload []*models.Blog `json:"body,omitempty"`
 }
 
 // NewGetBlogsOK creates GetBlogsOK with default headers values
@@ -35,13 +35,13 @@ func NewGetBlogsOK() *GetBlogsOK {
 }
 
 // WithPayload adds the payload to the get blogs o k response
-func (o *GetBlogsOK) WithPayload(payload models.Blogs) *GetBlogsOK {
+func (o *GetBlogsOK) WithPayload(payload []*models.Blog) *GetBlogsOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get blogs o k response
-func (o *GetBlogsOK) SetPayload(payload models.Blogs) {
+func (o *GetBlogsOK) SetPayload(payload []*models.Blog) {
 	o.Payload = payload
 }
 
@@ -51,7 +51,7 @@ func (o *GetBlogsOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 	rw.WriteHeader(200)
 	payload := o.Payload
 	if payload == nil {
-		payload = make(models.Blogs, 0, 50)
+		payload = make([]*models.Blog, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

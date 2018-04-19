@@ -66,7 +66,9 @@ paths:
         200:
           description: "Successful response"
           schema:
-            $ref: "#/definitions/blogs"
+            type: "array"
+            items:
+              $ref: "#/definitions/blog"
         400:
           description: "Bad Request"
           schema:
@@ -92,7 +94,10 @@ paths:
         201:
           description: "The request has been fulfilled, resulting in the creation of a new resource."
           schema:
-            $ref: "#/definitions/blog"
+            type: "object"
+            properties:
+              id:
+                type: "string"
         400:
           description: "Bad Request"
           schema:
@@ -185,23 +190,10 @@ definitions:
   apiversion:
     type: "object"
     properties:
-       apiVersion:
+      apiVersion:
         type: "string"
     required:
     - "apiVersion"
-  blogs:
-    type: "array"
-    items:
-      $ref: "#/definitions/blog"
-  paging:
-    type: "object"
-    properties:
-      previous:
-        type: "string"
-        format: "uri"
-      next:
-        type: "string"
-        format: "uri"
   blog:
     type: "object"
     properties:
@@ -216,12 +208,12 @@ definitions:
       timestamp:
         type: "string"
       author: 
-        $ref: "#/definitions/author"
+        $ref: "#/definitions/user"
       comment_ids:
           type: "array"
           items:
               type: "string"
-  author:
+  user:
     type: "object"
     properties:
       id:
@@ -242,7 +234,7 @@ definitions:
         type: "integer"
         format: "int32"
       author:
-        $ref: "#/definitions/author"
+        $ref: "#/definitions/user"
   generic.error:
     type: "object"
     properties:

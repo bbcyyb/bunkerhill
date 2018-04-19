@@ -25,7 +25,7 @@ type InsertBlogCreated struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Blog `json:"body,omitempty"`
+	Payload *models.InsertBlogCreatedBody `json:"body,omitempty"`
 }
 
 // NewInsertBlogCreated creates InsertBlogCreated with default headers values
@@ -35,13 +35,13 @@ func NewInsertBlogCreated() *InsertBlogCreated {
 }
 
 // WithPayload adds the payload to the insert blog created response
-func (o *InsertBlogCreated) WithPayload(payload *models.Blog) *InsertBlogCreated {
+func (o *InsertBlogCreated) WithPayload(payload *models.InsertBlogCreatedBody) *InsertBlogCreated {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the insert blog created response
-func (o *InsertBlogCreated) SetPayload(payload *models.Blog) {
+func (o *InsertBlogCreated) SetPayload(payload *models.InsertBlogCreatedBody) {
 	o.Payload = payload
 }
 

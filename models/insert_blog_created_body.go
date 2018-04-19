@@ -12,16 +12,16 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// Author author
-// swagger:model author
-type Author struct {
+// InsertBlogCreatedBody insert blog created body
+// swagger:model insertBlogCreatedBody
+type InsertBlogCreatedBody struct {
 
 	// id
 	ID string `json:"id,omitempty"`
 }
 
-// Validate validates this author
-func (m *Author) Validate(formats strfmt.Registry) error {
+// Validate validates this insert blog created body
+func (m *InsertBlogCreatedBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if len(res) > 0 {
@@ -31,7 +31,7 @@ func (m *Author) Validate(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *Author) MarshalBinary() ([]byte, error) {
+func (m *InsertBlogCreatedBody) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -39,8 +39,8 @@ func (m *Author) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Author) UnmarshalBinary(b []byte) error {
-	var res Author
+func (m *InsertBlogCreatedBody) UnmarshalBinary(b []byte) error {
+	var res InsertBlogCreatedBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

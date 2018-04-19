@@ -101,7 +101,10 @@ func init() {
           "200": {
             "description": "Successful response",
             "schema": {
-              "$ref": "#/definitions/blogs"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/blog"
+              }
             }
           },
           "400": {
@@ -141,7 +144,12 @@ func init() {
           "201": {
             "description": "The request has been fulfilled, resulting in the creation of a new resource.",
             "schema": {
-              "$ref": "#/definitions/blog"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
@@ -294,19 +302,11 @@ func init() {
         }
       }
     },
-    "author": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      }
-    },
     "blog": {
       "type": "object",
       "properties": {
         "author": {
-          "$ref": "#/definitions/author"
+          "$ref": "#/definitions/user"
         },
         "body": {
           "type": "string"
@@ -331,17 +331,11 @@ func init() {
         }
       }
     },
-    "blogs": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/blog"
-      }
-    },
     "comment": {
       "type": "object",
       "properties": {
         "author": {
-          "$ref": "#/definitions/author"
+          "$ref": "#/definitions/user"
         },
         "body": {
           "type": "string"
@@ -381,16 +375,11 @@ func init() {
         }
       }
     },
-    "paging": {
+    "user": {
       "type": "object",
       "properties": {
-        "next": {
-          "type": "string",
-          "format": "uri"
-        },
-        "previous": {
-          "type": "string",
-          "format": "uri"
+        "id": {
+          "type": "string"
         }
       }
     }
@@ -485,7 +474,10 @@ func init() {
           "200": {
             "description": "Successful response",
             "schema": {
-              "$ref": "#/definitions/blogs"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/blog"
+              }
             }
           },
           "400": {
@@ -525,7 +517,7 @@ func init() {
           "201": {
             "description": "The request has been fulfilled, resulting in the creation of a new resource.",
             "schema": {
-              "$ref": "#/definitions/blog"
+              "$ref": "#/definitions/insertBlogCreatedBody"
             }
           },
           "400": {
@@ -678,19 +670,11 @@ func init() {
         }
       }
     },
-    "author": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        }
-      }
-    },
     "blog": {
       "type": "object",
       "properties": {
         "author": {
-          "$ref": "#/definitions/author"
+          "$ref": "#/definitions/user"
         },
         "body": {
           "type": "string"
@@ -715,17 +699,11 @@ func init() {
         }
       }
     },
-    "blogs": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/blog"
-      }
-    },
     "comment": {
       "type": "object",
       "properties": {
         "author": {
-          "$ref": "#/definitions/author"
+          "$ref": "#/definitions/user"
         },
         "body": {
           "type": "string"
@@ -774,16 +752,20 @@ func init() {
       },
       "x-go-gen-location": "operations"
     },
-    "paging": {
+    "insertBlogCreatedBody": {
       "type": "object",
       "properties": {
-        "next": {
-          "type": "string",
-          "format": "uri"
-        },
-        "previous": {
-          "type": "string",
-          "format": "uri"
+        "id": {
+          "type": "string"
+        }
+      },
+      "x-go-gen-location": "operations"
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
         }
       }
     }
