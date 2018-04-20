@@ -12,6 +12,7 @@ GOBUILD := $(GOCMD) build
 GOCLEAN := $(GOCMD) clean
 GOTEST := $(GOCMD) test
 GOGET := $(GOCMD) get
+GOFMT := $(GOCMD)imports
 
 # go-swagger commands
 SWAGGERGEN := swagger generate

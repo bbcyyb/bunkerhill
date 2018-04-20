@@ -2,16 +2,21 @@ SHELL := /bin/bash
 
 include Makefile.variables
 
-.PHONY: all
-all: clean install
+.PHONY: dev 
+dev: clean install
+	$(BIN)/$(BINARY_NAME) --host 10.62.59.210 --port 3000
 
 .PHONY: install
-install:
+install: fmt
 	$(GOINSTALL) $(SERVER_PATH)
 
 .PHONY: build
-build:
+build: fmt
 	$(GOBUILD) -o $(BINARY_NAME) -v $(SERVER_PATH)
+
+.PHONY: test
+test: fmt
+	$(GOTEST) -v ./...
 
 .PHONY: regen
 regen:
@@ -24,15 +29,11 @@ vendor:
 	glide init
 	glide install
 
-.PHONY: test
-test:
-	$(GOTEST) -v ./...
-
 .PHONY: clean
 clean:
 	$(GOCLEAN)
 	rm -f $(BIN)/$(BINARY_NAME)
 
-.PHONY: dev 
-dev: clean install
-	$(BIN)/$(BINARY_NAME) --host 10.62.59.210 --port 3000
+.PHONY: fmt
+fmt:
+	$(GOFMT) -w $$(find . -type f -name "*.go" -not -path "./vendor/*")

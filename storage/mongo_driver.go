@@ -1,9 +1,10 @@
 package storage
 
 import (
+	"log"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"log"
 )
 
 type MongoDoc struct {
