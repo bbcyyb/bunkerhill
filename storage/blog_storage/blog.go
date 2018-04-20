@@ -55,7 +55,9 @@ func GetAll() ([]*models.Blog, error) {
 func Insert(nb *models.Blog) (string, error) {
 	b := stom(nb)
 	b.ID = bson.NewObjectId()
-	return storage.Insert(collection, b)
+	b.AuthorId = b.ID
+	fmt.Println(b.AuthorId)
+	return b.ID.Hex(), storage.Insert(collection, b)
 }
 
 func Update(id string, b *models.Blog) error {
