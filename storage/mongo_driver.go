@@ -7,10 +7,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-type MongoDoc struct {
-	ID bson.ObjectId
-}
-
 var (
 	mgoSession *mgo.Session
 	database   = "bunkerhill"
@@ -103,18 +99,16 @@ func Get(
 	return results, nil
 }
 
-func Insert(collection string, d interface{}) (string, error) {
-	doc := d.(*MongoDoc)
-	doc.ID = bson.NewObjectId()
+func Insert(collection string, d interface{}) error {
 	operation := func(c *mgo.Collection) error {
-		return c.Insert(*doc)
+		return c.Insert(d)
 	}
 
 	if err := withCollection(collection, operation); err != nil {
-		return "", err
+		return err
 	}
 
-	return doc.ID.Hex(), nil
+	return nil
 }
 
 func Update(collection string, query bson.M, change bson.M) error {

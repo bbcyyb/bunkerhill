@@ -80,15 +80,19 @@ func GetById(params blog.GetBlogByIDParams) middleware.Responder {
 
 func Insert(params blog.InsertBlogParams) middleware.Responder {
 	newId, err := blog_storage.Insert(params.Blog)
-
 	if err != nil {
 		errPayload := generateErrorPayload(err)
 		return blog.NewInsertBlogInternalServerError().WithPayload(errPayload)
 	}
 
-	payload := &models.InsertBlogCreatedBody{ID: newId}
+	//reload blog entity which just has been created.
+	blog_, err := blog_storage.GetById(newId)
+	if err != nil {
+		errPayload := generateErrorPayload(err)
+		return blog.NewInsertBlogInternalServerError().WithPayload(errPayload)
+	}
 
-	return blog.NewInsertBlogCreated().WithPayload(payload)
+	return blog.NewInsertBlogCreated().WithPayload(blog_)
 }
 
 func Update(params blog.UpdateBlogParams) middleware.Responder {

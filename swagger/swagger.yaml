@@ -96,10 +96,7 @@ paths:
         201:
           description: "The request has been fulfilled, resulting in the creation of a new resource."
           schema:
-            type: "object"
-            properties:
-              id:
-                type: "string"
+            $ref: "#/definitions/blog"
         400:
           description: "Bad Request"
           schema:

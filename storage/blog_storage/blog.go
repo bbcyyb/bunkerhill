@@ -20,9 +20,9 @@ type Blog struct {
 
 	Timestamp string `bson:"timestamp"`
 
-	CommentIds []string `bson:"commitids"`
+	CommentIds []bson.ObjectId `bson:"commitids"`
 
-	AuthorId string `bson:"authorid"`
+	AuthorId bson.ObjectId `bson:"authorid"`
 }
 
 var (
@@ -54,6 +54,7 @@ func GetAll() ([]*models.Blog, error) {
 
 func Insert(nb *models.Blog) (string, error) {
 	b := stom(nb)
+	b.ID = bson.NewObjectId()
 	return storage.Insert(collection, b)
 }
 
@@ -102,13 +103,27 @@ func Get(
 
 func stom(source *models.Blog) *Blog {
 	result := &Blog{
-		ID:         bson.ObjectIdHex(source.ID),
-		Title:      source.Title,
-		Body:       source.Body,
-		BodyHTML:   source.BodyHTML,
-		Timestamp:  source.Timestamp,
-		CommentIds: source.CommentIds,
-		AuthorId:   source.Author.ID,
+		Title:     source.Title,
+		Body:      source.Body,
+		BodyHTML:  source.BodyHTML,
+		Timestamp: source.Timestamp,
+	}
+
+	if source.ID != "" {
+		result.ID = bson.ObjectIdHex(source.ID)
+	}
+
+	if source.Author != nil && source.Author.ID != "" {
+		result.AuthorId = bson.ObjectIdHex(source.Author.ID)
+	}
+
+	if source.CommentIds != nil && 0 < len(source.CommentIds) {
+		array := make([]bson.ObjectId, 0, len(source.CommentIds))
+		for _, cid := range source.CommentIds {
+			array = append(array, bson.ObjectId(cid))
+		}
+
+		result.CommentIds = array
 	}
 
 	return result
@@ -116,12 +131,20 @@ func stom(source *models.Blog) *Blog {
 
 func mtos(source *Blog) *models.Blog {
 	result := &models.Blog{
-		ID:         source.ID.Hex(),
-		Title:      source.Title,
-		Body:       source.Body,
-		BodyHTML:   source.BodyHTML,
-		Timestamp:  source.Timestamp,
-		CommentIds: source.CommentIds,
+		ID:        source.ID.Hex(),
+		Title:     source.Title,
+		Body:      source.Body,
+		BodyHTML:  source.BodyHTML,
+		Timestamp: source.Timestamp,
+	}
+
+	if source.CommentIds != nil && 0 < len(source.CommentIds) {
+		array := make([]string, 0, len(source.CommentIds))
+		for _, cid := range source.CommentIds {
+			array = append(array, cid.Hex())
+		}
+
+		result.CommentIds = array
 	}
 
 	return result

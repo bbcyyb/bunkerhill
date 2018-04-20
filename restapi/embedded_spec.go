@@ -122,6 +122,9 @@ func init() {
         }
       },
       "post": {
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "application/json"
         ],
@@ -144,12 +147,7 @@ func init() {
           "201": {
             "description": "The request has been fulfilled, resulting in the creation of a new resource.",
             "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/blog"
             }
           },
           "400": {
@@ -207,6 +205,9 @@ func init() {
         }
       },
       "put": {
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "application/json"
         ],
@@ -495,6 +496,9 @@ func init() {
         }
       },
       "post": {
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "application/json"
         ],
@@ -517,7 +521,7 @@ func init() {
           "201": {
             "description": "The request has been fulfilled, resulting in the creation of a new resource.",
             "schema": {
-              "$ref": "#/definitions/insertBlogCreatedBody"
+              "$ref": "#/definitions/blog"
             }
           },
           "400": {
@@ -575,6 +579,9 @@ func init() {
         }
       },
       "put": {
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "application/json"
         ],
@@ -748,15 +755,6 @@ func init() {
       "properties": {
         "data": {
           "$ref": "#/definitions/apiversion"
-        }
-      },
-      "x-go-gen-location": "operations"
-    },
-    "insertBlogCreatedBody": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
         }
       },
       "x-go-gen-location": "operations"
