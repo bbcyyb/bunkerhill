@@ -80,6 +80,8 @@ paths:
     post:
       tags:
       - "blog"
+      consumes:
+      - "application/json"
       produces:
       - "application/json"
       parameters:
@@ -135,6 +137,8 @@ paths:
     put:
       tags:
       - "blog"
+      consumes:
+      - "application/json"
       produces:
       - "application/json"
       parameters:

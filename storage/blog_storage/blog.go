@@ -30,9 +30,16 @@ var (
 )
 
 func GetById(id string) (*models.Blog, error) {
-	source, err := storage.GetById(collection, id)
+	if !bson.IsObjectIdHex(id) {
+		return nil, errors.New(fmt.Sprintf("id{%s} is not a valid hex representation", id))
+	}
+
+	source, err := storage.GetById(collection, bson.ObjectId(id))
+	if source == nil || err != nil {
+		return nil, err
+	}
 	b := source.(*Blog)
-	return mtos(b), err
+	return mtos(b), nil
 }
 
 func GetAll() ([]*models.Blog, error) {

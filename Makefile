@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 include Makefile.variables
 
-.PHONY: dev 
+.PHONY: dev
 dev: clean install
 	$(BIN)/$(BINARY_NAME) --host 10.62.59.210 --port 3000
 
