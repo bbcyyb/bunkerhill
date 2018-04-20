@@ -63,7 +63,12 @@ func Update(id string, b *models.Blog) error {
 	return storage.Update(collection, query, change)
 }
 
-func Remove(selector bson.M) error {
+func Remove(id string) error {
+	if !bson.IsObjectIdHex(id) {
+		return errors.New(fmt.Sprint("id [%s] is not a valid hex representation", id))
+	}
+
+	selector := bson.M{"_id": bson.ObjectIdHex(id)}
 	return storage.Remove(collection, selector)
 }
 

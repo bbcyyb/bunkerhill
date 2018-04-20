@@ -15,7 +15,7 @@ Restful API 设计规范实战
 https://segmentfault.com/a/1190000007313505
 */
 
-func GetBlogs(params blog.GetBlogsParams) middleware.Responder {
+func Get(params blog.GetBlogsParams) middleware.Responder {
 	query := make(map[string]interface{})
 	select_ := make(map[string]interface{})
 	var sort []string
@@ -68,7 +68,17 @@ func GetBlogs(params blog.GetBlogsParams) middleware.Responder {
 	return blog.NewGetBlogsOK().WithPayload(payload)
 }
 
-func InsertBlog(params blog.InsertBlogParams) middleware.Responder {
+func GetById(params blog.GetBlogByIDParams) middleware.Responder {
+	payload, err := blog_storage.GetById(params.BlogID)
+	if err != nil {
+		errPayload := generateErrorPayload(err)
+		return blog.NewGetBlogByIDInternalServerError().WithPayload(errPayload)
+	}
+
+	return blog.NewGetBlogByIDOK().WithPayload(payload)
+}
+
+func Insert(params blog.InsertBlogParams) middleware.Responder {
 	newId, err := blog_storage.Insert(params.Blog)
 
 	if err != nil {
@@ -81,7 +91,7 @@ func InsertBlog(params blog.InsertBlogParams) middleware.Responder {
 	return blog.NewInsertBlogCreated().WithPayload(payload)
 }
 
-func UpdateBlog(params blog.UpdateBlogParams) middleware.Responder {
+func Update(params blog.UpdateBlogParams) middleware.Responder {
 	id := params.BlogID
 	b := params.Blog
 	var author *models.User
@@ -109,6 +119,15 @@ func UpdateBlog(params blog.UpdateBlogParams) middleware.Responder {
 	payload := newBlog
 	payload.Author = author
 	return blog.NewUpdateBlogOK().WithPayload(payload)
+}
+
+func Delete(params blog.DeleteBlogParams) middleware.Responder {
+	if err := blog_storage.Remove(params.BlogID); err != nil {
+		errPayload := generateErrorPayload(err)
+		return blog.NewDeleteBlogInternalServerError().WithPayload(errPayload)
+	}
+
+	return blog.NewDeleteBlogOK()
 }
 
 func generateErrorPayload(err error) *models.GenericError {

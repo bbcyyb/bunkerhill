@@ -44,9 +44,14 @@ func configureAPI(api *operations.BunkerhillAPI) http.Handler {
 	/**************************************
 	* Blog
 	**************************************/
-	api.BlogGetBlogsHandler = blog.GetBlogsHandlerFunc(blog_imp.GetBlogs)
-	api.BlogInsertBlogHandler = blog.InsertBlogHandlerFunc(blog_imp.InsertBlog)
-	api.BlogUpdateBlogHandler = blog.UpdateBlogHandlerFunc(blog_imp.UpdateBlog)
+	api.BlogGetBlogsHandler = blog.GetBlogsHandlerFunc(blog_imp.Get)
+	api.BlogGetBlogByIDHandler = blog.GetBlogByIDHandlerFunc(blog_imp.GetById)
+	api.BlogInsertBlogHandler = blog.InsertBlogHandlerFunc(blog_imp.Insert)
+	api.BlogUpdateBlogHandler = blog.UpdateBlogHandlerFunc(blog_imp.Update)
+	api.BlogDeleteBlogHandler = blog.DeleteBlogHandlerFunc(blog_imp.Delete)
+	/**************************************
+	* User
+	**************************************/
 
 	api.ServerShutdown = func() {}
 
