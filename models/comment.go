@@ -10,7 +10,6 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // Comment comment
@@ -26,14 +25,17 @@ type Comment struct {
 	// body html
 	BodyHTML string `json:"body_html,omitempty"`
 
+	// created at
+	CreatedAt string `json:"created_at,omitempty"`
+
 	// id
 	ID string `json:"id,omitempty"`
 
+	// modified at
+	ModifiedAt string `json:"modified_at,omitempty"`
+
 	// post id
 	PostID int32 `json:"post_id,omitempty"`
-
-	// timestamp
-	Timestamp strfmt.DateTime `json:"timestamp,omitempty"`
 }
 
 // Validate validates this comment
@@ -41,11 +43,6 @@ func (m *Comment) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAuthor(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateTimestamp(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -71,19 +68,6 @@ func (m *Comment) validateAuthor(formats strfmt.Registry) error {
 			return err
 		}
 
-	}
-
-	return nil
-}
-
-func (m *Comment) validateTimestamp(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Timestamp) { // not required
-		return nil
-	}
-
-	if err := validate.FormatOf("timestamp", "body", "date-time", m.Timestamp.String(), formats); err != nil {
-		return err
 	}
 
 	return nil

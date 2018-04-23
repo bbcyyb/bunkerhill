@@ -28,11 +28,14 @@ type Blog struct {
 	// comment ids
 	CommentIds []string `json:"comment_ids"`
 
+	// created at
+	CreatedAt string `json:"created_at,omitempty"`
+
 	// id
 	ID string `json:"id,omitempty"`
 
-	// timestamp
-	Timestamp string `json:"timestamp,omitempty"`
+	// modified at
+	ModifiedAt string `json:"modified_at,omitempty"`
 
 	// title
 	Title string `json:"title,omitempty"`

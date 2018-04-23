@@ -3,6 +3,8 @@ package blog_storage
 import (
 	"errors"
 	"fmt"
+	"strconv"
+	"time"
 
 	"github.com/bbcyyb/bunkerhill/models"
 	"github.com/bbcyyb/bunkerhill/storage"
@@ -10,7 +12,7 @@ import (
 )
 
 type Blog struct {
-	ID bson.ObjectId `bson:"_id"`
+	ID bson.ObjectId `bson:"_id,omitempty"`
 
 	Title string `bson:"title"`
 
@@ -18,11 +20,29 @@ type Blog struct {
 
 	BodyHTML string `bson:"bodyhtml"`
 
-	Timestamp string `bson:"timestamp"`
+	CommentIds []bson.ObjectId `bson:"comment_ids"`
 
-	CommentIds []bson.ObjectId `bson:"commitids"`
+	//AuthorId bson.ObjectId `bson:"authorid"`
 
-	AuthorId bson.ObjectId `bson:"authorid"`
+	CreatedAt time.Time `bson:"created_at"`
+
+	ModifiedAt time.Time `bson:"modified_at"`
+}
+
+type Comment struct {
+	ID bson.ObjectId `bson:"_id,omitempty"`
+
+	Body string `bson:"body"`
+
+	BodyHTML string `bson:"bodyhtml"`
+
+	Disabled bool `bson:"disabled"`
+
+	AuthorId bson.ObjectId `bson:"author_id"`
+
+	CreatedAt time.Time `bson:"created_at"`
+
+	ModifiedAt time.Time `bson:"modified_at"`
 }
 
 var (
@@ -34,29 +54,25 @@ func GetById(id string) (*models.Blog, error) {
 		return nil, errors.New(fmt.Sprintf("id{%s} is not a valid hex representation", id))
 	}
 
-	source, err := storage.GetById(collection, bson.ObjectId(id))
+	source, err := storage.GetById(collection, bson.ObjectIdHex(id))
 	if source == nil || err != nil {
 		return nil, err
 	}
-	b := source.(*Blog)
-	return mtos(b), nil
-}
 
-func GetAll() ([]*models.Blog, error) {
-	var blogs []*models.Blog
-	docs, err := storage.GetAll(collection)
-	for _, doc := range docs {
-		b := doc.(*models.Blog)
-		blogs = append(blogs, b)
-	}
-	return blogs, err
+	b := convertInterfaceToBlogStruct(source)
+	return mtos(b), nil
 }
 
 func Insert(nb *models.Blog) (string, error) {
 	b := stom(nb)
 	b.ID = bson.NewObjectId()
-	b.AuthorId = b.ID
-	fmt.Println(b.AuthorId)
+	timeNow := time.Now()
+	b.CreatedAt = timeNow
+	b.ModifiedAt = timeNow
+
+	/*
+		b.AuthorId = b.ID
+	*/
 	return b.ID.Hex(), storage.Insert(collection, b)
 }
 
@@ -96,58 +112,87 @@ func Get(
 
 	var payload []*models.Blog
 	for _, source := range result {
-		b := source.(Blog)
-		payload = append(payload, mtos(&b))
+		b := convertInterfaceToBlogStruct(&source)
+		payload = append(payload, mtos(b))
 	}
 
 	return payload, nil
 }
 
+func convertInterfaceToBlogStruct(source *interface{}) *Blog {
+	var b Blog
+	bsonBytes, _ := bson.Marshal(*source)
+	bson.Unmarshal(bsonBytes, &b)
+	return &b
+}
+
 func stom(source *models.Blog) *Blog {
 	result := &Blog{
-		Title:     source.Title,
-		Body:      source.Body,
-		BodyHTML:  source.BodyHTML,
-		Timestamp: source.Timestamp,
+		Title:    source.Title,
+		Body:     source.Body,
+		BodyHTML: source.BodyHTML,
 	}
 
 	if source.ID != "" {
 		result.ID = bson.ObjectIdHex(source.ID)
 	}
 
-	if source.Author != nil && source.Author.ID != "" {
-		result.AuthorId = bson.ObjectIdHex(source.Author.ID)
+	if source.CreatedAt != "" {
+		if i64, err := strconv.ParseInt(source.CreatedAt, 10, 64); err == nil {
+			// time.time <- string
+			result.CreatedAt = time.Unix(i64, 0)
+		}
 	}
 
-	if source.CommentIds != nil && 0 < len(source.CommentIds) {
-		array := make([]bson.ObjectId, 0, len(source.CommentIds))
-		for _, cid := range source.CommentIds {
-			array = append(array, bson.ObjectId(cid))
+	if source.ModifiedAt != "" {
+		if i64, err := strconv.ParseInt(source.ModifiedAt, 10, 64); err == nil {
+			// time.time <- string
+			result.ModifiedAt = time.Unix(i64, 0)
+		}
+	}
+
+	if source.CommentIds == nil {
+		result.CommentIds = make([]bson.ObjectId, 0, 1)
+	}
+
+	/*
+		if source.Author != nil && source.Author.ID != "" {
+			result.AuthorId = bson.ObjectIdHex(source.Author.ID)
 		}
 
-		result.CommentIds = array
-	}
+		if source.CommentIds != nil && 0 < len(source.CommentIds) {
+			array := make([]bson.ObjectId, 0, len(source.CommentIds))
+			for _, cid := range source.CommentIds {
+				array = append(array, bson.ObjectIdHex(cid))
+			}
+
+			result.CommentIds = array
+		}
+	*/
 
 	return result
 }
 
 func mtos(source *Blog) *models.Blog {
 	result := &models.Blog{
-		ID:        source.ID.Hex(),
-		Title:     source.Title,
-		Body:      source.Body,
-		BodyHTML:  source.BodyHTML,
-		Timestamp: source.Timestamp,
+		ID:         source.ID.Hex(),
+		Title:      source.Title,
+		Body:       source.Body,
+		BodyHTML:   source.BodyHTML,
+		CreatedAt:  strconv.FormatInt(source.CreatedAt.Unix(), 10),
+		ModifiedAt: strconv.FormatInt(source.ModifiedAt.Unix(), 10),
 	}
 
-	if source.CommentIds != nil && 0 < len(source.CommentIds) {
-		array := make([]string, 0, len(source.CommentIds))
-		for _, cid := range source.CommentIds {
-			array = append(array, cid.Hex())
+	/*
+		if source.CommentIds != nil && 0 < len(source.CommentIds) {
+			array := make([]string, 0, len(source.CommentIds))
+			for _, cid := range source.CommentIds {
+				array = append(array, cid.Hex())
+			}
+
+			result.CommentIds = array
 		}
-
-		result.CommentIds = array
-	}
+	*/
 
 	return result
 }

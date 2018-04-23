@@ -321,10 +321,13 @@ func init() {
             "type": "string"
           }
         },
+        "created_at": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
         },
-        "timestamp": {
+        "modified_at": {
           "type": "string"
         },
         "title": {
@@ -344,16 +347,18 @@ func init() {
         "body_html": {
           "type": "string"
         },
+        "created_at": {
+          "type": "string"
+        },
         "id": {
+          "type": "string"
+        },
+        "modified_at": {
           "type": "string"
         },
         "post_id": {
           "type": "integer",
           "format": "int32"
-        },
-        "timestamp": {
-          "type": "string",
-          "format": "date-time"
         }
       }
     },
@@ -695,10 +700,13 @@ func init() {
             "type": "string"
           }
         },
+        "created_at": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
         },
-        "timestamp": {
+        "modified_at": {
           "type": "string"
         },
         "title": {
@@ -718,16 +726,18 @@ func init() {
         "body_html": {
           "type": "string"
         },
+        "created_at": {
+          "type": "string"
+        },
         "id": {
+          "type": "string"
+        },
+        "modified_at": {
           "type": "string"
         },
         "post_id": {
           "type": "integer",
           "format": "int32"
-        },
-        "timestamp": {
-          "type": "string",
-          "format": "date-time"
         }
       }
     },

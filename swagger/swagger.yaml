@@ -206,7 +206,9 @@ definitions:
         type: "string"
       body_html:
         type: "string"
-      timestamp:
+      created_at:
+        type: "string"
+      modified_at:
         type: "string"
       author: 
         $ref: "#/definitions/user"
@@ -228,9 +230,10 @@ definitions:
         type: "string"
       body_html:
         type: "string"
-      timestamp:
+      created_at:
         type: "string"
-        format: "date-time"
+      modified_at:
+        type: "string"
       post_id:
         type: "integer"
         format: "int32"

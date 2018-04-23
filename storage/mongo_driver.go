@@ -32,10 +32,10 @@ func withCollection(collection string, s func(*mgo.Collection) error) error {
 	return s(c)
 }
 
-func GetById(collection string, id bson.ObjectId) (interface{}, error) {
+func GetById(collection string, id bson.ObjectId) (*interface{}, error) {
 	var result interface{}
 	operation := func(c *mgo.Collection) error {
-		return c.Find(id).One(&result)
+		return c.FindId(id).One(&result)
 	}
 
 	if err := withCollection(collection, operation); err != nil {

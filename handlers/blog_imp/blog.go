@@ -1,7 +1,6 @@
 package blog_imp
 
 import (
-	"log"
 	"strings"
 
 	"github.com/bbcyyb/bunkerhill/handlers/user_imp"
@@ -81,18 +80,14 @@ func GetById(params blog.GetBlogByIDParams) middleware.Responder {
 
 func Insert(params blog.InsertBlogParams) middleware.Responder {
 	newId, err := blog_storage.Insert(params.Blog)
-	log.Println("=======> 1")
 	if err != nil {
-		log.Println("=======> 2")
 		errPayload := generateErrorPayload(err)
 		return blog.NewInsertBlogInternalServerError().WithPayload(errPayload)
 	}
 
 	//reload blog entity which just has been created.
-	log.Println("=======> 3")
 	blog_, err := blog_storage.GetById(newId)
 	if err != nil {
-		log.Println("=======> 4")
 		errPayload := generateErrorPayload(err)
 		return blog.NewInsertBlogInternalServerError().WithPayload(errPayload)
 	}
