@@ -22,7 +22,11 @@ test: fmt
 regen:
 	rm -rf $(SRC)/$(PROJECT_PATH)/models
 	rm -rf $(SRC)/$(PROJECT_PATH)/restapi/operations
-	$(SWAGGERGEN) server --target $(SRC)/$(PROJECT_PATH) --name $(PROJECT_NAME) --spec $(SRC)/$(PROJECT_PATH)/swagger/swagger.yaml --exclude-main
+	$(SWAGGER_GEN) server --target $(SRC)/$(PROJECT_PATH) --name $(PROJECT_NAME) --spec $(SRC)/$(PROJECT_PATH)/swagger/swagger.yaml --exclude-main
+
+.PHONY: validate
+validate:
+	$(SWAGGER_VALIDATE) swagger/swagger.yaml
 
 .PHONY: vendor
 vendor:

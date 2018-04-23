@@ -15,7 +15,8 @@ GOGET := $(GOCMD) get
 GOFMT := $(GOCMD)imports
 
 # go-swagger commands
-SWAGGERGEN := swagger generate
+SWAGGER_GEN := swagger generate
+SWAGGER_VALIDATE := swagger validate
 
 # Basic path
 BIN := $(GOPATH)/bin
