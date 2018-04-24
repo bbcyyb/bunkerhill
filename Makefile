@@ -2,6 +2,10 @@ SHELL := /bin/bash
 
 include Makefile.variables
 
+.PHONY: all
+all: clean vendor_install regen
+
+
 .PHONY: dev
 dev: clean install
 	$(BIN)/$(BINARY_NAME) --host 10.62.59.210 --port 3000
@@ -28,12 +32,22 @@ regen:
 validate:
 	$(SWAGGER_VALIDATE) swagger/swagger.yaml
 
-.PHONY: vendor
-vendor:
+.PHONY: vendor_init
+vendor_init:
 	rm -f $(SRC)/$(PROJECT_PATH)/glide.yaml
-	rm -f $(SRC)/$(PROJECT_PATH)/glide.lock
 	glide init
+
+.PHONY: vendor_update
+vendor_update:
+	rm -f $(SRC)/$(PROJECT_PATH)/glide.lock
+	glide up
+
+.PHONY: vendor_install
+vendor_install:
 	glide install
+
+.PHONY: vendor
+vendor: vendor_init vendor_update vendor_install
 
 .PHONY: clean
 clean:
