@@ -3,7 +3,7 @@ SHELL := /bin/bash
 include Makefile.variables
 
 .PHONY: all
-all: clean vendor_install regen
+all: clean vendor_install regen install
 
 
 .PHONY: dev

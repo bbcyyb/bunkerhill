@@ -5,6 +5,10 @@ export PKG=github.com/bbcyyb/bunkerhill
 export GOPATH=$(pwd)
 export PATH=${GOPATH}:${GOPATH}/bin:$PATH
 
+# turns of c-code, which we aren't using and isn't allowed during cross-compile
+export CGO_ENABLED=0 
+export GOOS=linux
+
 
 mkdir -p src/${PKG}
 mkdir -p bin
@@ -22,23 +26,11 @@ pushd src/golang.org/x/tools/cmd/goimports
 go install
 popd
 
-echo "** Install go-swagger as static binary"
+echo "** Install go-swagger from source code"
 # We use go-swagger to re generate swagger code but it's not dependency for bunkerhill source code
-latestv=$(curl -s https://api.github.com/repos/go-swagger/go-swagger/releases/latest | jq -r .tag_name)
-curl -o /usr/local/bin/swagger -L'#' https://github.com/go-swagger/go-swagger/releases/download/$latestv/swagger_$(echo `uname`|tr '[:upper:]' '[:lower:]')_amd64
-chmod +x /usr/local/bin/swagger
+go get -u github.com/go-swagger/go-swagger/cmd/swagger
 
-# build_sub_linked=( "cmd" "handlers" "models" "restapi" "storage" "swagger" "version" )
-# echo "** Creating soft link for each folder and file which need to be built later"
-# for sub in "${build_sub_linked[@]}"; do
-#     if [ -L src/${PKG}/${sub} ]; then
-#         echo "src/${PKG}/${sub} already linked to $(pwd)/${sub}, skipping"
-#     else
-#         ln -s $(pwd)/${sub} src/${PKG}/${sub}
-#     fi
-# done
-
-build_sub_copy=( "glide.yaml" "Makefile" "Makefile.variables" "cmd" "handlers" "models" "restapi" "storage" "swagger")
+build_sub_copy=( "glide.yaml" "Makefile" "Makefile.variables" "cmd" "handlers" "models" "restapi" "storage" "swagger" "vendor")
 echo "** Copying for each file and file which need to be built later"
 for sub in "${build_sub_copy[@]}"; do
     cp -r $(pwd)/${sub} src/${PKG}/${sub}
@@ -46,9 +38,5 @@ done
 
 pushd src/${PKG}
 echo "** Running makefile to build package"
-make all
-ls -al restapi/*
-echo "GOPATH is $GOPATH"
-echo "pwd is $(pwd)"
-make install
+${CGO_ENABLED} ${GOOS} make all 
 popd
