@@ -15,20 +15,10 @@ mkdir -p bin
 
 echo "** Fetching glide for docker environment"
 go get github.com/Masterminds/glide
-pushd src/github.com/Masterminds/glide
-make build
-cp ./glide ${GOPATH}/bin
-popd
-
 echo "** Fetching goimports for format code"
 go get golang.org/x/tools/cmd/goimports
-pushd src/golang.org/x/tools/cmd/goimports
-go install
-popd
-
-echo "** Install go-swagger from source code"
-# We use go-swagger to re generate swagger code but it's not dependency for bunkerhill source code
-go get -u github.com/go-swagger/go-swagger/cmd/swagger
+echo "** Fetching go-swagger from source code"
+go get github.com/go-swagger/go-swagger/cmd/swagger
 
 build_sub_copy=( "glide.yaml" "Makefile" "Makefile.variables" "cmd" "handlers" "models" "restapi" "storage" "swagger" "vendor")
 echo "** Copying for each file and file which need to be built later"
@@ -38,5 +28,8 @@ done
 
 pushd src/${PKG}
 echo "** Running makefile to build package"
-${CGO_ENABLED} ${GOOS} make all 
+make all 
+cp ./bunkerhill-server /golang/bin/bunkerhill-server
+
+ls -al /golang/bin/*
 popd

@@ -5,6 +5,7 @@ package main
 import (
 	"log"
 	"os"
+	"runtime"
 
 	loads "github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
@@ -30,6 +31,7 @@ func main() {
 * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	`
 	log.Println(logo)
+	log.Printf("** OS: %s\n** Architecture: %s\n", runtime.GOOS, runtime.GOARCH)
 
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 	if err != nil {

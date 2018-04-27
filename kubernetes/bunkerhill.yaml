@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bunkerhill
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: bunkerhill
+        component: bunkerhill
+    spec:
+      containers:
+      - name: bunkerhill
+        image: bunkerhill-alpine:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3030
+          name: bunkerhill
+        env:
+        - name: MONGODB_SERVICE
+          value: mongodb://mongo:27017/bunkerhill
+apiVersion: v1
+kind: Service
+metadata:
+  name: bunkerhill
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+  - name: bunkerhill
+    port: 3030
+    nodePort: 8080
+  selector:
+    app: bunkerhill
+    component: bunkerhill

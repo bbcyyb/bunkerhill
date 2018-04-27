@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb
+        component: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongodb:3.4.10
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        volumeMounts:
+        - name: mongodb-persistent-storage
+          mountPath: /data/db/mongodb
+      volumes:
+      - name: mongodb-persistent-storage
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+  - name: mongodb
+    port: 27017
+  selector:
+    app: mongodb
+    component: mongodb

@@ -5,6 +5,14 @@ else
 	DOCKER := sudo docker
 endif
 
+ifeq ($(GOOS),)
+	GOOS := linux
+endif
+
+ifeq ($(CGO_ENABLED),)
+	CGO_ENABLED := 0
+endif
+
 # Basic go commands
 GOCMD :=go
 GOINSTALL := $(GOCMD) install
