@@ -3,9 +3,7 @@ services:
   bunkerhill-server:
     build: .
     image: bunkerhill-server-alpine
-    container_name: bunkerhill-server_running
-    volumes:
-      - /home/kevin/temp/bunkerhill:/root/
+    container_name: bunkerhill-server
     links:
       - mongodb
     ports:

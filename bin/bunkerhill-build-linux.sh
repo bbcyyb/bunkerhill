@@ -29,7 +29,5 @@ done
 pushd src/${PKG}
 echo "** Running makefile to build package"
 make all 
-cp ./bunkerhill-server /golang/bin/bunkerhill-server
-
-ls -al /golang/bin/*
+cp ./bunkerhill-server ${GOPATH}/bin/bunkerhill-server
 popd

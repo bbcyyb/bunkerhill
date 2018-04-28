@@ -10,7 +10,7 @@ import (
 var (
 	mgoSession *mgo.Session
 	database   = "bunkerhill"
-	URL        = "mongodb://127.0.0.1:27017"
+	URL        = "mongodb://10.62.59.210:27018"
 )
 
 func getSession() *mgo.Session {

@@ -1,8 +1,8 @@
 FROM golang:1.10.1 as builder
 
-WORKDIR /golang/
+WORKDIR /go/src/github.com/bbcyyb/bunkerhill
 
-COPY bin script
+COPY bin bin
 COPY cmd cmd
 COPY handlers handlers
 COPY models models
@@ -15,24 +15,22 @@ COPY glide.yaml glide.yaml
 COPY Makefile Makefile
 COPY Makefile.variables Makefile.variables
 
-RUN chmod +x script/*.sh
+RUN chmod +x bin/*.sh
 
 RUN apt-get update && apt-get install -y jq
 
-RUN script/bunkerhill-build-linux.sh
+RUN bin/bunkerhill-build-linux.sh
 
+# use a minimal alpine image
+FROM alpine:latest
 
-# FROM alpine:latest
-FROM golang:1.10.1-alpine3.7
-
-RUN apk --no-cache add --update curl bash ca-certificates \
- && rm -rf /var/cache/apk/*
+RUN apk --no-cache add ca-certificates && rm -rf /var/cache/apk/*
 
 WORKDIR /root/
 
-COPY --from=builder /golang/bin/bunkerhill-server ./bukerhill-server
+COPY --from=builder /go/src/github.com/bbcyyb/bunkerhill/bin/bunkerhill-server .
 
-RUN ls -al
+COPY version version
 
 EXPOSE 3030
 

@@ -18,8 +18,8 @@ install: fmt
 
 .PHONY: build
 build: fmt
-	@echo "Makefile-------> CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) $(GOBUILD) -o $(BINARY_NAME) -v $(SERVER_PATH)"
-	CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) $(GOBUILD) -a -v -installsuffix cgo -o $(BINARY_NAME) -v $(SERVER_PATH)
+	@echo "Makefile-------> CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) $(GOBUILD) -a -installsuffix cgo -o $(BINARY_NAME) $(SERVER_PATH)"
+	CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) $(GOBUILD) -a -installsuffix cgo -o $(BINARY_NAME) ${SERVER_PATH}
 
 .PHONY: test
 test: fmt
