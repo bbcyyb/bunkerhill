@@ -10,6 +10,7 @@ import (
 	loads "github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
 
+	"github.com/bbcyyb/bunkerhill/config"
 	"github.com/bbcyyb/bunkerhill/restapi"
 	"github.com/bbcyyb/bunkerhill/restapi/operations"
 )
@@ -32,6 +33,10 @@ func main() {
 	`
 	log.Println(logo)
 	log.Printf("** OS: %s\n** Architecture: %s\n", runtime.GOOS, runtime.GOARCH)
+
+	adapter := config.NewAdapter()
+	adapter.Register("ini", "config/config.ini")
+	adapter.Register("env", "")
 
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 	if err != nil {

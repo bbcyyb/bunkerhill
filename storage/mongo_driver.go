@@ -2,21 +2,26 @@ package storage
 
 import (
 	"log"
+	"os"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
+const (
+	MONGODB_LOG = "mongodb.log"
+	DATABASE    = "bunkerhill"
+)
+
 var (
 	mgoSession *mgo.Session
-	database   = "bunkerhill"
-	URL        = "mongodb://10.62.59.210:27018"
+	url        = os.Getenv(MONGODB_LOG) //"mongodb://10.62.59.210:27018"
 )
 
 func getSession() *mgo.Session {
 	if mgoSession == nil {
 		var err error
-		mgoSession, err = mgo.Dial(URL)
+		mgoSession, err = mgo.Dial(url)
 		if err != nil {
 			log.Println(err.Error())
 			panic(err)
@@ -28,7 +33,7 @@ func getSession() *mgo.Session {
 func withCollection(collection string, s func(*mgo.Collection) error) error {
 	session := getSession()
 	defer session.Close()
-	c := session.DB(database).C(collection)
+	c := session.DB(DATABASE).C(collection)
 	return s(c)
 }
 
