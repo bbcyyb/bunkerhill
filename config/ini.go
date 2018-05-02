@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-const (
+var (
 	COMMENT         = []byte{'#'}
 	SEPARATOR       = []byte{'='}
 	DEFAULT_SECTION = "default"
@@ -38,7 +38,7 @@ func (s IniSection) addEntry(key string, val string) {
 	s[key] = val
 }
 
-func (s IniSection) getValue(key) (string, error) {
+func (s IniSection) getValue(key string) (string, error) {
 	return s[key]
 }
 

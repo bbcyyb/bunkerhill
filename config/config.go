@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	instance = &Adapter{make(map[string]*Config), make([]string)}
-	mutex    = sync.Mutex
+	instance = &Adapter{confs: make(map[string]*Config)}
+	mutex    sync.Mutex
 )
 
 type Adapter struct {
@@ -28,7 +28,7 @@ func (a *Adapter) Register(mode, path string) {
 	log.Printf("** Register configuration module [%s]\n", mode)
 	mutex.Lock()
 	if _, ok := a.confs[mode]; ok {
-		panic("config: Register called twice for adapter " + name)
+		panic("config: Register called twice for adapter " + mode)
 	}
 
 	conf, err := newConfig(mode, path)
@@ -37,7 +37,7 @@ func (a *Adapter) Register(mode, path string) {
 	}
 
 	a.confs[mode] = conf
-	a.sequence = Append(a.sequence, mode)
+	a.sequence = append(a.sequence, mode)
 
 	mutex.Unlock()
 }
@@ -47,7 +47,7 @@ func (a *Adapter) GetValue(key string) string {
 		return ""
 	}
 
-	for _, mode := range a.confs {
+	for _, mode := range a.sequence {
 		if result := a.confs[mode].GetValue(key); result != "" {
 			return result
 		}
@@ -59,9 +59,9 @@ func newConfig(mode, path string) (*Config, error) {
 	var newConf *Config
 	switch mode {
 	case "env":
-		newConf = environ.NewEnvConfig()
+		newConf = NewEnvConfig()
 	case "ini":
-		newConf = ini.NewIniConfig(path)
+		newConf = NewIniConfig(path)
 	default:
 		panic("Don't supported configure type.")
 	}
