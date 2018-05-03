@@ -39,19 +39,19 @@ validate:
 	$(SWAGGER_VALIDATE) swagger/swagger.yaml
 
 .PHONY: vendor_init
-vendor_init:
+vendor-init:
 	rm -f $(SRC)/$(PROJECT_PATH)/glide.yaml
 	@echo "Makefile-------> glide init"
 	glide init
 
 .PHONY: vendor_update
-vendor_update:
+vendor-update:
 	rm -f $(SRC)/$(PROJECT_PATH)/glide.lock
 	@echo "Makefile-------> glide up"
 	glide up
 
 .PHONY: vendor_install
-vendor_install:
+vendor-install:
 	@echo "Makefile-------> glide install"
 	glide install
 
@@ -68,3 +68,13 @@ clean:
 fmt:
 	@echo "Makefile-------> $(GOFMT) -w $$(find . -type f -name "*.go" -not -path "./vendor/*")"
 	$(GOFMT) -w $$(find . -type f -name "*.go" -not -path "./vendor/*")
+
+.PHONY: docker_prod
+docker_prod:
+	@echo "Makefile-------> $(DOCKER_BUILD) -t $(PROD_IMAGE_NAME) -f docker/Dockerfile_prod ."	
+	$(DOCKER_BUILD) -t $(IMAGE_NAME) -f docker/Dockerfile_prod .	
+	
+.PHONY: docker_dev
+docker_dev:
+	@echo "Makefile-------> $(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f docker/prod/Dockerfile_dev ."	
+	$(DOCKER_BUILD) -t $(IMAGE_NAME) -f docker/Dockerfile_dev .	

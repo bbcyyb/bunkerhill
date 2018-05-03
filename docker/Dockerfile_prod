@@ -3,6 +3,7 @@ FROM golang:1.10.1 as builder
 WORKDIR /go/src/github.com/bbcyyb/bunkerhill
 
 COPY bin bin
+COPY config config
 COPY cmd cmd
 COPY handlers handlers
 COPY models models
@@ -19,7 +20,7 @@ RUN chmod +x bin/*.sh
 
 RUN apt-get update && apt-get install -y jq
 
-RUN bin/bunkerhill-build-linux.sh
+RUN bin/bunkerhill-build-linux-prod.sh
 
 # use a minimal alpine image
 FROM alpine:latest
@@ -31,6 +32,8 @@ WORKDIR /root/
 COPY --from=builder /go/src/github.com/bbcyyb/bunkerhill/bin/bunkerhill-server .
 
 COPY version version
+
+COPY config/config.ini config/config.ini
 
 EXPOSE 3030
 

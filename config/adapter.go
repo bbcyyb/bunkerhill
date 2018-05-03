@@ -6,12 +6,12 @@ import (
 )
 
 var (
-	instance = &Adapter{confs: make(map[string]*Config)}
+	instance = &Adapter{confs: make(map[string]Config)}
 	mutex    sync.Mutex
 )
 
 type Adapter struct {
-	confs    map[string]*Config
+	confs    map[string]Config
 	sequence []string
 }
 
@@ -33,10 +33,11 @@ func (a *Adapter) Register(mode, path string) {
 
 	conf, err := newConfig(mode, path)
 	if err != nil {
+		log.Println(err.Error())
 		panic("config: Attempt to create new config entry " + mode + " failed.")
 	}
 
-	a.confs[mode] = conf
+	a.confs[mode] = *conf
 	a.sequence = append(a.sequence, mode)
 
 	mutex.Unlock()
@@ -56,7 +57,7 @@ func (a *Adapter) GetValue(key string) string {
 }
 
 func newConfig(mode, path string) (*Config, error) {
-	var newConf *Config
+	var newConf Config
 	switch mode {
 	case "env":
 		newConf = NewEnvConfig()
@@ -69,5 +70,5 @@ func newConfig(mode, path string) (*Config, error) {
 	if err := newConf.Load(); err != nil {
 		return nil, err
 	}
-	return newConf, err
+	return &newConf, nil
 }

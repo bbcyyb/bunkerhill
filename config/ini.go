@@ -19,7 +19,7 @@ type IniSection map[string]string
 
 type IniConfig struct {
 	filename string
-	section  map[string]*IniSection
+	section  map[string]IniSection
 	RWMutex  sync.RWMutex
 }
 
@@ -27,7 +27,6 @@ func NewIniConfig(path string) *IniConfig {
 	config := &IniConfig{
 		filename: path,
 		section:  make(map[string]IniSection),
-		RWMutex:  sync.RWMutex{},
 	}
 
 	config.section[DEFAULT_SECTION] = newIniSection()
@@ -38,8 +37,9 @@ func (s IniSection) addEntry(key string, val string) {
 	s[key] = val
 }
 
-func (s IniSection) getValue(key string) (string, error) {
-	return s[key]
+func (s IniSection) getValue(key string) (string, bool) {
+	result, ok := s[key]
+	return result, ok
 }
 
 func newIniSection() IniSection {
@@ -47,13 +47,12 @@ func newIniSection() IniSection {
 }
 
 func (c *IniConfig) Load() error {
-	file, err := os.Open(envFile)
+	file, err := os.Open(c.filename)
 	if err != nil {
 		return err
 	}
-	c.Lock()
+
 	defer file.Close()
-	defer c.Unlock()
 
 	buf := bufio.NewReader(file)
 	section := DEFAULT_SECTION
@@ -81,7 +80,7 @@ func (c *IniConfig) Load() error {
 
 		// handle section line
 		if bytes.HasPrefix(line, []byte("[")) && bytes.HasSuffix(line, []byte("]")) {
-			section = string(line[1:len(line-1)])
+			section = string(line[1 : len(line)-1])
 			section = strings.ToLower(section)
 			if _, ok := c.section[section]; !ok {
 				c.section[section] = newIniSection()

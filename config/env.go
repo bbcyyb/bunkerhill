@@ -22,6 +22,7 @@ func (c *EnvConfig) Load() error {
 		arr := strings.Split(e, "=")
 		c.pairs[arr[0]] = arr[1]
 	}
+	return nil
 }
 
 func (c *EnvConfig) GetValue(k string) string {
