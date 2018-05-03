@@ -35,8 +35,8 @@ SERVER_PATH := $(PROJECT_PATH)/cmd/bunkerhill-server
 
 DOCKER_CMD := docker
 DOCKER_BUILD := $(DOCKER_CMD) build
-PROD_IMAGE_NAME := bunkerhill:latest
-DEV_IMAGE_NAME := bunkerhill_dev:latest
+PROD_IMAGE_NAME := bunkerhill-server
+DEV_IMAGE_NAME := bunkerhill-server-dev
 
 
 export PROJECT_NAME = bunkerhill

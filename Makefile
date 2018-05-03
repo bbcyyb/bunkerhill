@@ -71,10 +71,10 @@ fmt:
 
 .PHONY: docker_prod
 docker_prod:
-	@echo "Makefile-------> $(DOCKER_BUILD) -t $(PROD_IMAGE_NAME) -f docker/Dockerfile_prod ."	
-	$(DOCKER_BUILD) -t $(IMAGE_NAME) -f docker/Dockerfile_prod .	
+	@echo "Makefile-------> $(DOCKER_BUILD) -t $(PROD_IMAGE_NAME) -f docker/Dockerfile.prod ."	
+	$(DOCKER_BUILD) -t $(PROD_IMAGE_NAME) -f docker/Dockerfile.prod .
 	
 .PHONY: docker_dev
 docker_dev:
-	@echo "Makefile-------> $(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f docker/prod/Dockerfile_dev ."	
-	$(DOCKER_BUILD) -t $(IMAGE_NAME) -f docker/Dockerfile_dev .	
+	@echo "Makefile-------> $(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f docker/prod/Dockerfile.dev ."	
+	$(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f docker/Dockerfile.dev .	

@@ -20,7 +20,7 @@ RUN chmod +x bin/*.sh
 
 RUN apt-get update && apt-get install -y jq
 
-RUN bin/bunkerhill-build-linux-prod.sh
+RUN bin/bunkerhill_build_linux_prod.sh
 
 # use a minimal alpine image
 FROM alpine:latest
