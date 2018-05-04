@@ -11,6 +11,7 @@ help:
 	@echo "   build               Build compiles tha executable packages"
 	@echo "   clean               Clean removes object files from package source directories"
 	@echo " * compose_up          Use docker-compose to create and start services"
+	@echo " * compose_down        Use docker-compose to stop and remove containers, networks, images and volumes"
 	@echo " * dev                 Dev mode, run compiles and runs the main package comprising the named Go source files"
 	@echo " * docker_build        Build an image from a Dockerfile"
 	@echo " * docker_build_dev    Build an image as development environment"
@@ -102,7 +103,12 @@ docker_build:
 docker_build_dev:
 	@echo "Makefile-------> $(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f $(DOCKERFILE_DEV) ."	
 	$(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f $(DOCKERFILE_DEV) .	
+	$(DOCKER_RUN) -it --privileged --name $(DEV_CONTAINER_NAME) -p 3000:3000/tcp -v $(DEV_VOLUME_FROM):$(DEV_VOLUME_TO) $(DEV_IMAGE_NAME)
 
 .PHONY: compose_up
 compose_up:
 	$(COMPOSE_CMD) -f $(COMPOSEFILE) $(COMPOSE_UP)
+
+.PHONY: compose_down
+compose_down:
+	$(COMPOSE_CMD) -f $(COMPOSEFILE) $(COMPOSE_DOWN)

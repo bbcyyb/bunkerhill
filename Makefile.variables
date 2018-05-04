@@ -35,11 +35,17 @@ SERVER_PATH := $(PROJECT_PATH)/cmd/bunkerhill-server
 
 DOCKER_CMD := docker
 DOCKER_BUILD := $(DOCKER_CMD) build
+DOCKER_RUN := $(DOCKER_CMD) run
 PROD_IMAGE_NAME := bunkerhill-alpine
 DEV_IMAGE_NAME := bunkerhill-alpine-dev
+PROD_CONTAINER_NAME := bunkerhill-server
+DEV_CONTAINER_NAME := bunkerhill-server-dev
+DEV_VOLUME_FROM := $(SRC)/$(PROJECT_PATH)
+DEV_VOLUME_TO := /go/src/$(PROJECT_PATH)
 
 COMPOSE_CMD := docker-compose
 COMPOSE_UP := up --build
+COMPOSE_DOWN := down
 
 DOCKERFILE_DEV := docker/Dockerfile.dev
 DOCKERFILE_PROD := docker/Dockerfile.prod

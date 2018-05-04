@@ -25,16 +25,20 @@ RUN bin/bunkerhill_build_linux_prod.sh
 # use a minimal alpine image
 FROM alpine:latest
 
-RUN apk --no-cache add ca-certificates && rm -rf /var/cache/apk/*
+RUN apk --no-cache add ca-certificates bash && rm -rf /var/cache/apk/*
 
 WORKDIR /root/
 
-COPY --from=builder /go/src/github.com/bbcyyb/bunkerhill/bin/bunkerhill-server .
+COPY --from=builder /go/src/github.com/bbcyyb/bunkerhill/bunkerhill-server .
 
 COPY version version
 
 COPY config/config.ini config/config.ini
 
+COPY bin/bunkerhill_entrypoint_linux_prod.sh bin/bunkerhill_entrypoint_linux_prod.sh
+
+RUN chmod +x bin/bunkerhill_entrypoint_linux_prod.sh
+
 EXPOSE 3030
 
-ENTRYPOINT ["./bunkerhill-server", "--scheme=http", "--port=3030", "--host=0.0.0.0"]
+ENTRYPOINT ["bin/bunkerhill_entrypoint_linux_prod.sh"]
