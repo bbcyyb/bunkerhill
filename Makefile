@@ -2,9 +2,33 @@ SHELL := /bin/bash
 
 include Makefile.variables
 
+.PHONY: help
+help:
+	@echo "Usage:	make COMMAND"
+	@echo ""
+	@echo "Commands:"
+	@echo "   all                 Run clean, vendor_install, regen, build in sequence"
+	@echo "   build               Build compiles tha executable packages"
+	@echo "   clean               Clean removes object files from package source directories"
+	@echo " * compose_up          Use docker-compose to create and start services"
+	@echo " * dev                 Dev mode, run compiles and runs the main package comprising the named Go source files"
+	@echo " * docker_build        Build an image from a Dockerfile"
+	@echo " * docker_build_dev    Build an image as development environment"
+	@echo "   fmt                 Format Go code and update Go import lines, adding missling ones and removing unreferenced ones."
+	@echo "   help                Get help on a command"
+	@echo "   install             Install compiles and installs the packages"
+	@echo " * k8s                 Use kubernetes to create and start services"
+	@echo "   regen               Regenerate go-swagger code (main.go and configure_bunkerhill.go don't be rewritten)"
+	@echo "   test                Automate testing the packages"
+	@echo "   validate            Validate swagger file"
+	@echo "   vendor_init         Use glide to initialize vendor package info, creating a glide.yaml file"
+	@echo "   vendor_update       Use glide to update project's dependencies"
+	@echo "   vendor_install      Use glide to install project's dependencies"
+	@echo "   vendor              Run vendor_init, vendor_update, vendor_install in sequence"
+	@echo " "
+
 .PHONY: all
 all: clean vendor_install regen build
-
 
 .PHONY: dev
 dev: clean install
@@ -69,12 +93,16 @@ fmt:
 	@echo "Makefile-------> $(GOFMT) -w $$(find . -type f -name "*.go" -not -path "./vendor/*")"
 	$(GOFMT) -w $$(find . -type f -name "*.go" -not -path "./vendor/*")
 
-.PHONY: docker_prod
-docker_prod:
-	@echo "Makefile-------> $(DOCKER_BUILD) -t $(PROD_IMAGE_NAME) -f docker/Dockerfile.prod ."	
-	$(DOCKER_BUILD) -t $(PROD_IMAGE_NAME) -f docker/Dockerfile.prod .
+.PHONY: docker_build
+docker_build:
+	@echo "Makefile-------> $(DOCKER_BUILD) -t $(PROD_IMAGE_NAME) -f $(DOCKERFILE_PROD) ." 
+	$(DOCKER_BUILD) -t $(PROD_IMAGE_NAME) -f $(DOCKERFILE_PROD) .
 	
-.PHONY: docker_dev
-docker_dev:
-	@echo "Makefile-------> $(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f docker/prod/Dockerfile.dev ."	
-	$(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f docker/Dockerfile.dev .	
+.PHONY: docker_build_dev
+docker_build_dev:
+	@echo "Makefile-------> $(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f $(DOCKERFILE_DEV) ."	
+	$(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f $(DOCKERFILE_DEV) .	
+
+.PHONY: compose_up
+compose_up:
+	$(COMPOSE_CMD) -f $(COMPOSEFILE) $(COMPOSE_UP)

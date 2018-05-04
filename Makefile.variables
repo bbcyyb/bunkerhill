@@ -35,9 +35,15 @@ SERVER_PATH := $(PROJECT_PATH)/cmd/bunkerhill-server
 
 DOCKER_CMD := docker
 DOCKER_BUILD := $(DOCKER_CMD) build
-PROD_IMAGE_NAME := bunkerhill-server
-DEV_IMAGE_NAME := bunkerhill-server-dev
+PROD_IMAGE_NAME := bunkerhill-alpine
+DEV_IMAGE_NAME := bunkerhill-alpine-dev
 
+COMPOSE_CMD := docker-compose
+COMPOSE_UP := up --build
+
+DOCKERFILE_DEV := docker/Dockerfile.dev
+DOCKERFILE_PROD := docker/Dockerfile.prod
+COMPOSEFILE := docker/docker-compose.yaml
 
 export PROJECT_NAME = bunkerhill
 BINARY_NAME := bunkerhill-server

@@ -20,7 +20,7 @@ go get golang.org/x/tools/cmd/goimports
 echo "** Fetching go-swagger from source code"
 go get github.com/go-swagger/go-swagger/cmd/swagger
 
-build_sub_copy=( "glide.yaml" "Makefile" "Makefile.variables" "cmd" "handlers" "models" "restapi" "storage" "swagger" "vendor" "conf")
+build_sub_copy=( "glide.yaml" "Makefile" "Makefile.variables" "cmd" "handlers" "models" "restapi" "storage" "swagger" "vendor" "config")
 echo "** Copying for each file and file which need to be built later"
 for sub in "${build_sub_copy[@]}"; do
     cp -r $(pwd)/${sub} src/${PKG}/${sub}
