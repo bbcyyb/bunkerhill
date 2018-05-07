@@ -14,7 +14,8 @@ help:
 	@echo " * compose_down        Use docker-compose to stop and remove containers, networks, images and volumes"
 	@echo " * dev                 Dev mode, run compiles and runs the main package comprising the named Go source files"
 	@echo " * docker_build        Build an image from a Dockerfile"
-	@echo " * docker_build_dev    Build an image as development environment"
+	@echo " * docker_build_dev    Build an image which will be run under development environment"
+	@echo " * docker_run_dev      Compile and run new code under development environment"
 	@echo "   fmt                 Format Go code and update Go import lines, adding missling ones and removing unreferenced ones."
 	@echo "   help                Get help on a command"
 	@echo "   install             Install compiles and installs the packages"
@@ -33,8 +34,13 @@ all: clean vendor_install regen build
 
 .PHONY: dev
 dev: clean install
-	@echo "Makefile-------> $(BIN)/$(BINARY_NAME) --host 10.62.59.210 --port 3000"
-	$(BIN)/$(BINARY_NAME) --host 10.62.59.210 --port 3000
+	@echo "MONGODB_URL=mongodb://127.0.0.1:27017 $(BIN)/$(BINARY_NAME) --host 127.0.0.1 --port 3000"
+	MONGODB_URL=mongodb://127.0.0.1:27017 $(BIN)/$(BINARY_NAME) --host 127.0.0.1 --port 3000
+
+.PHONY: dev_docker
+dev_docker: clean install
+	@echo "Makefile-------> MONGODB_URL=$(PARAMS_MONGODB_URL) $(BIN)/$(BINARY_NAME) --host $(PARAMS_HOST) --port $(PARAMS_PORT)" 
+	MONGODB_URL=$(PARAMS_MONGODB_URL) $(BIN)/$(BINARY_NAME) --host $(PARAMS_HOST) --port $(PARAMS_PORT) 
 
 .PHONY: install
 install: fmt
@@ -103,6 +109,15 @@ docker_build:
 docker_build_dev:
 	@echo "Makefile-------> $(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f $(DOCKERFILE_DEV) ."	
 	$(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f $(DOCKERFILE_DEV) .	
+
+.PHONY: docker_rm_dev
+docker_rm_dev:
+ifneq ($(spec_container_id),)
+	$(DOCKER_RM) $(DEV_CONTAINER_NAME)
+endif
+
+.PHONY: docker_run_dev
+docker_run_dev: docker_rm_dev
 	$(DOCKER_RUN) -it --privileged --name $(DEV_CONTAINER_NAME) -p 3000:3000/tcp -v $(DEV_VOLUME_FROM):$(DEV_VOLUME_TO) $(DEV_IMAGE_NAME)
 
 .PHONY: compose_up

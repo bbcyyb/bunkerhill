@@ -1,8 +1,8 @@
 nosudo = $(shell docker version > /dev/null 2>&1 && echo 1)
 ifeq ($(nosudo),1)
-	DOCKER := docker
+	DOCKER_CMD := docker
 else
-	DOCKER := sudo docker
+	DOCKER_CMD := sudo docker
 endif
 
 ifeq ($(GOOS),)
@@ -14,7 +14,7 @@ ifeq ($(CGO_ENABLED),)
 endif
 
 # Basic go commands
-GOCMD :=go
+GOCMD := go
 GOINSTALL := $(GOCMD) install
 GOBUILD := $(GOCMD) build
 GOCLEAN := $(GOCMD) clean
@@ -33,9 +33,12 @@ SRC:= $(GOPATH)/src
 PROJECT_PATH := github.com/bbcyyb/bunkerhill
 SERVER_PATH := $(PROJECT_PATH)/cmd/bunkerhill-server
 
-DOCKER_CMD := docker
 DOCKER_BUILD := $(DOCKER_CMD) build
 DOCKER_RUN := $(DOCKER_CMD) run
+DOCKER_RM := $(DOCKER_CMD) rm
+DOCKER_PS := $(DOCKER_CMD) ps
+spec_container_id := $(shell docker ps -aq -f name=bunkerhill-server-dev)
+
 PROD_IMAGE_NAME := bunkerhill-alpine
 DEV_IMAGE_NAME := bunkerhill-alpine-dev
 PROD_CONTAINER_NAME := bunkerhill-server

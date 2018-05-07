@@ -7,7 +7,7 @@ services:
     image: docker-alpine:latest
     container_name: bunkerhill-server
     environment:
-    - MONGODB.URL=mongodb://10.62.59.210:27018
+    - MONGODB_URL=mongodb://10.62.59.210:27018
     links:
     - mongodb
     ports:
