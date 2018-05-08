@@ -32,3 +32,12 @@ func (c *EnvConfig) GetValue(k string) string {
 
 	return ""
 }
+
+func (c *EnvConfig) Review() []string {
+	var result []string
+	for k, v := range c.pairs {
+		result = append(result, "[env] - "+k+"="+v)
+	}
+
+	return result
+}

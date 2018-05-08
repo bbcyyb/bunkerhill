@@ -42,6 +42,15 @@ func (s IniSection) getValue(key string) (string, bool) {
 	return result, ok
 }
 
+func (s IniSection) review(sectionName string) []string {
+	var result []string
+	for k, v := range s {
+		result = append(result, "[ini] - "+sectionName+":"+k+"="+v)
+	}
+
+	return result
+}
+
 func newIniSection() IniSection {
 	return make(IniSection)
 }
@@ -117,4 +126,13 @@ func (c *IniConfig) GetValue(k string) string {
 	}
 
 	return ""
+}
+
+func (c *IniConfig) Review() []string {
+	var result []string
+	for name, section := range c.section {
+		result = append(result, section.review(name)...)
+	}
+
+	return result
 }

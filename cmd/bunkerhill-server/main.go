@@ -35,8 +35,14 @@ func main() {
 	log.Printf("** OS: %s\n** Architecture: %s\n", runtime.GOOS, runtime.GOARCH)
 
 	adapter := config.NewAdapter()
+	// env is high priority
 	adapter.Register("ini", "config/config.ini")
 	adapter.Register("env", "")
+
+	log.Println("Available variables as following:")
+	for _, m := range adapter.Review() {
+		log.Printf("** %s", m)
+	}
 
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 	if err != nil {

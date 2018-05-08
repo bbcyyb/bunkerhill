@@ -18,6 +18,7 @@ type Adapter struct {
 type Config interface {
 	GetValue(string) string
 	Load() error
+	Review() []string
 }
 
 func NewAdapter() *Adapter {
@@ -44,16 +45,29 @@ func (a *Adapter) Register(mode, path string) {
 }
 
 func (a *Adapter) GetValue(key string) string {
+	result := ""
 	if len(a.confs) == 0 {
-		return ""
+		return result
 	}
 
 	for _, mode := range a.sequence {
-		if result := a.confs[mode].GetValue(key); result != "" {
-			return result
+		if val := a.confs[mode].GetValue(key); val != "" {
+			result = val
 		}
 	}
-	return ""
+	return result
+}
+
+func (a *Adapter) Review() []string {
+	var result []string
+	if len(a.confs) == 0 {
+		return result
+	}
+
+	for _, mode := range a.sequence {
+		result = append(result, a.confs[mode].Review()...)
+	}
+	return result
 }
 
 func newConfig(mode, path string) (*Config, error) {

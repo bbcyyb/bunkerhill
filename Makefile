@@ -39,8 +39,8 @@ dev: clean install
 
 .PHONY: dev_docker
 dev_docker: clean install
-	@echo "Makefile-------> MONGODB_URL=$(PARAMS_MONGODB_URL) $(BIN)/$(BINARY_NAME) --host $(PARAMS_HOST) --port $(PARAMS_PORT)" 
-	MONGODB_URL=$(PARAMS_MONGODB_URL) $(BIN)/$(BINARY_NAME) --host $(PARAMS_HOST) --port $(PARAMS_PORT) 
+	@echo "Makefile-------> $(BIN)/$(BINARY_NAME) --host $(PARAMS_HOST) --port $(PARAMS_PORT)" 
+	$(BIN)/$(BINARY_NAME) --host $(PARAMS_HOST) --port $(PARAMS_PORT) 
 
 .PHONY: install
 install: fmt

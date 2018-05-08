@@ -9,6 +9,5 @@ export MONGODB_URL=mongodb://10.62.59.210:27017
 
 echo "** Running makefile to dev package"
 make dev_docker \
-    PARAMS_MONGODB_URL=mongodb://127.0.0.1:27017 \
     PARAMS_HOST=0.0.0.0 \
     PARAMS_PORT=3000

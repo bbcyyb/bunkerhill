@@ -14,7 +14,7 @@ const (
 
 var (
 	mgoSession *mgo.Session
-	url        = os.Getenv("MONGODB.URL") //"mongodb://10.62.59.210:27018"
+	url        = os.Getenv("MONGODB_URL") //"mongodb://10.62.59.210:27018"
 )
 
 func getSession() *mgo.Session {
