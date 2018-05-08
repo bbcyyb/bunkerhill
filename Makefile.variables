@@ -47,12 +47,14 @@ DEV_VOLUME_FROM := $(SRC)/$(PROJECT_PATH)
 DEV_VOLUME_TO := /go/src/$(PROJECT_PATH)
 
 COMPOSE_CMD := docker-compose
-COMPOSE_UP := up --build
+COMPOSE_UP := up
 COMPOSE_DOWN := down
+COMPOSE_BUILD := build
 
 DOCKERFILE_DEV := docker/Dockerfile.dev
 DOCKERFILE_PROD := docker/Dockerfile.prod
-COMPOSEFILE := docker/docker-compose.yaml
+COMPOSEFILE_PROD := docker/docker-compose-prod.yaml
+COMPOSEFILE_DEV := docker/docker-compose-dev.yaml
 
 export PROJECT_NAME = bunkerhill
 BINARY_NAME := bunkerhill-server

@@ -1,17 +1,19 @@
 version: "3"
 services:
-  bunkerhill-server:
+  bunkerhill:
     build:
       context: ..
       dockerfile: docker/Dockerfile.prod
     image: docker-alpine:latest
-    container_name: bunkerhill-server
+    container_name: bunkerhill
     environment:
-    - MONGODB_URL=mongodb://10.62.59.210:27018
+    - MONGODB_URL=mongodb://mongodb-server:27017
     links:
+    - mongodb:mongodb-server
+    depends_on:
     - mongodb
     ports:
-    - 3030:3030
+    - 3000:3000
   mongodb:
     image: mongo:3.4.14-jessie 
     container_name: mongodb
