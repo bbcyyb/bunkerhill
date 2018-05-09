@@ -1,0 +1,36 @@
+version: "3"
+services:
+  bunkerhill-dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    image: bunkerhill-alpine-dev:latest
+    container_name: bunkerhill-dev
+    environment:
+    - MONGODB_URL=mongodb://mongodb-service-dev:27017
+    - MODE=dev
+    volumes:
+    - ${DEV_VOLUME_FROM}:${DEV_VOLUME_TO} 
+    links:
+    - mongodb-dev:mongodb-service-dev
+    depends_on:
+    - mongodb-dev
+    ports:
+    - 3030:3030
+    networks:
+    - bunkerhill-network-dev
+  mongodb-dev:
+    image: mongo:3.4.14-jessie 
+    container_name: mongodb-dev
+    environment:
+    - MONGO_DATA_DIR=/data/db
+    - MONGO_LOG_DIR=/dev/null
+    volumes:
+    - /data/db/mongodb-dev:/data/db
+    ports:
+    - 27018:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+    networks:
+    - bunkerhill-network-dev
+networks:
+  bunkerhill-network-dev:

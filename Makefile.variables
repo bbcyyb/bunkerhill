@@ -41,10 +41,10 @@ spec_container_id := $(shell docker ps -aq -f name=bunkerhill-server-dev)
 
 PROD_IMAGE_NAME := bunkerhill-alpine
 DEV_IMAGE_NAME := bunkerhill-alpine-dev
-PROD_CONTAINER_NAME := bunkerhill-server
-DEV_CONTAINER_NAME := bunkerhill-server-dev
-DEV_VOLUME_FROM := $(SRC)/$(PROJECT_PATH)
-DEV_VOLUME_TO := /go/src/$(PROJECT_PATH)
+PROD_CONTAINER_NAME := bunkerhill
+DEV_CONTAINER_NAME := bunkerhill-dev
+export DEV_VOLUME_FROM = $(SRC)/$(PROJECT_PATH)
+export DEV_VOLUME_TO = /go/src/$(PROJECT_PATH)
 
 COMPOSE_CMD := docker-compose
 COMPOSE_UP := up

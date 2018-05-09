@@ -20,24 +20,45 @@ import (
 
 func main() {
 	log.Println("Start bunkerhill-server ....")
-	logo := `
-* * * * * * * * * * * * * * * * * * * * * * * * * * *
-*  ______             _               _   _ _ _ _   *
-*  | ___ \           | |             | | | (_) | |  *
-*  | |_/ /_   _ _ __ | | _____ _ __  | |_| |_| | |  *
-*  | ___ \ | | | '_ \| |/ / _ \ '__| |  _  | | | |  *
-*  | |_/ / |_| | | | |   <  __/ |    | | | | | | |  *
-*  \____/ \__,_|_| |_|_|\_\___|_|    \_| |_/_|_|_|  *
-*                                                   *
-* * * * * * * * * * * * * * * * * * * * * * * * * * *
-	`
-	log.Println(logo)
-	log.Printf("** OS: %s\n** Architecture: %s\n", runtime.GOOS, runtime.GOARCH)
 
 	adapter := config.NewAdapter()
 	// env is high priority
 	adapter.Register("ini", "config/config.ini")
 	adapter.Register("env", "")
+
+	logo := `
+* * * * * * * * * * * * * * * * * * * * * * * * * *
+*  ______             _             _   _ _ _ _   *
+*  | ___ \           | |           | | | (_) | |  *
+*  | |_/ /_   _ _ __ | | _____ _ __| |_| |_| | |  *
+*  | ___ \ | | | '_ \| |/ / _ \ '__|  _  | | | |  *
+*  | |_/ / |_| | | | |   <  __/ |  | | | | | | |  *
+*  \____/ \__,_|_| |_|_|\_\___|_|  \_| |_/_|_|_|  *
+*                                                 *
+* * * * * * * * * * * * * * * * * * * * * * * * * *
+
+	`
+
+	logoDev := `
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+*  ______             _             _   _ _ _ _    ______             *
+*  | ___ \           | |           | | | (_) | |   |  _  \            *
+*  | |_/ /_   _ _ __ | | _____ _ __| |_| |_| | |   | | | |_____   __  *
+*  | ___ \ | | | '_ \| |/ / _ \ '__|  _  | | | |   | | | / _ \ \ / /  *
+*  | |_/ / |_| | | | |   <  __/ |  | | | | | | |   | |/ /  __/\ V /   *
+*  \____/ \__,_|_| |_|_|\_\___|_|  \_| |_/_|_|_|   |___/ \___| \_/    *
+*                                                                     *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+	`
+
+	if adapter.GetValue("MODE") == "dev" {
+		log.Println(logoDev)
+	} else {
+		log.Println(logo)
+	}
+
+	log.Printf("** OS: %s\n** Architecture: %s\n", runtime.GOOS, runtime.GOARCH)
 
 	log.Println("Available variables as following:")
 	for _, m := range adapter.Review() {

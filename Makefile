@@ -7,31 +7,32 @@ help:
 	@echo "Usage:	make COMMAND"
 	@echo ""
 	@echo "Commands:"
-	@echo "   all                 Run clean, vendor_install, regen, build in sequence"
-	@echo "   build               Build compiles tha executable packages"
+	@echo "   prod                Run clean, vendor_install, regen, build in sequence"
+	@echo "   dev                 Dev mode for native environment, run compiles and runs the main package comprising the named Go source files"
+	@echo "   dev_docker          Dev mode for docker environment, run compiles and runs the main package comprising the named Go source files"
+	@echo "   install             Install compiles and installs the packages"
+	@echo "   build               Build compiles that executable packages in native environment"
 	@echo "   clean               Clean removes object files from package source directories"
-	@echo " * compose_up_dev      Use docker-compose to create and start services"
-	@echo " * compose_down_dev    Use docker-compose to stop and remove containers, networks, images and volumes"
-	@echo " * compose_up_prod     Use docker-compose to create and start services"
-	@echo " * compose_down_prod   Use docker-compose to stop and remove containers, networks, images and volumes"
-	@echo "   dev                 Dev mode, run compiles and runs the main package comprising the named Go source files"
+	@echo " * up                  Start services, default by docker-compose"
+	@echo " * up_dev              Start services based on dev mode, default by docker-compose"
+	@echo " * down                Stop services, default by docker-dompose"
+	@echo " * down_dev            Stop services based on dev mode, default by docker-dompose"
+	@echo "   compose_up_dev      Use docker-compose to create and start services"
+	@echo "   compose_build_dev   Use docker-compose to build or rebuild images in docker-compose-dev.yaml"
+	@echo "   compose_down_dev    Use docker-compose to stop and remove containers, networks, images and volumes"
+	@echo "   compose_up_prod     Use docker-compose to create and start services"
+	@echo " * compose_build_prod  Use docker-compose to build or rebuild images in docker-compose-prod.yaml"
+	@echo "   compose_down_prod   Use docker-compose to stop and remove containers, networks, images and volumes"
 	@echo "   docker_build        Build an image from a Dockerfile"
 	@echo "   docker_build_dev    Build an image which will be run under development environment"
-	@echo "   docker_run_dev      Compile and run new code under development environment"
 	@echo "   fmt                 Format Go code and update Go import lines, adding missling ones and removing unreferenced ones."
 	@echo "   help                Get help on a command"
-	@echo "   install             Install compiles and installs the packages"
 	@echo "   k8s                 Use kubernetes to create and start services"
 	@echo "   regen               Regenerate go-swagger code (main.go and configure_bunkerhill.go don't be rewritten)"
 	@echo "   test                Automate testing the packages"
-	@echo "   validate            Validate swagger file"
-	@echo "   vendor_init         Use glide to initialize vendor package info, creating a glide.yaml file"
-	@echo "   vendor_update       Use glide to update project's dependencies"
-	@echo "   vendor_install      Use glide to install project's dependencies"
-	@echo "   vendor              Run vendor_init, vendor_update, vendor_install in sequence"
 	@echo " "
 
-.PHONY: all
+.PHONY: prod
 all: clean vendor_install regen build
 
 .PHONY: dev
@@ -112,19 +113,9 @@ docker_build_dev:
 	@echo "Makefile-------> $(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f $(DOCKERFILE_DEV) ."	
 	$(DOCKER_BUILD) -t $(DEV_IMAGE_NAME) -f $(DOCKERFILE_DEV) .	
 
-.PHONY: docker_rm_dev
-docker_rm_dev:
-ifneq ($(spec_container_id),)
-	$(DOCKER_RM) $(DEV_CONTAINER_NAME)
-endif
-
-.PHONY: docker_run_dev
-docker_run_dev: docker_rm_dev
-	$(DOCKER_RUN) -it --privileged --name $(DEV_CONTAINER_NAME) -p 3000:3000/tcp -v $(DEV_VOLUME_FROM):$(DEV_VOLUME_TO) $(DEV_IMAGE_NAME)
-
 .PHONY: compose_up_prod
 compose_up_prod:
-	$(COMPOSE_CMD) -f $(COMPOSEFILE_PROD) $(COMPOSE_UP)
+	$(COMPOSE_CMD) -f $(COMPOSEFILE_PROD) $(COMPOSE_UP) -d
 
 .PHONY: compose_build_prod
 compose_build_prod:
@@ -145,3 +136,15 @@ compose_build_dev:
 .PHONY: compose_down_dev
 compose_down_dev:
 	$(COMPOSE_CMD) -f $(COMPOSEFILE_DEV) $(COMPOSE_DOWN)
+
+.PHONY: up
+up: compose_up_prod
+
+.PHONY: down
+down: compose_down_prod
+
+.PHONY: up_dev
+up_dev: compose_up_dev
+
+.PHONY: down_dev
+down_dev: compose_down_dev

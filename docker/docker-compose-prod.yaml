@@ -4,16 +4,19 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.prod
-    image: docker-alpine:latest
+    image: bunkerhill-alpine:latest
     container_name: bunkerhill
     environment:
-    - MONGODB_URL=mongodb://mongodb-server:27017
+    - MONGODB_URL=mongodb://mongodb-service:27017
+    - MODE=prod
     links:
-    - mongodb:mongodb-server
+    - mongodb:mongodb-service
     depends_on:
     - mongodb
     ports:
     - 3000:3000
+    networks:
+    - bunkerhill-network
   mongodb:
     image: mongo:3.4.14-jessie 
     container_name: mongodb
@@ -22,6 +25,8 @@ services:
     - MONGO_LOG_DIR=/dev/null
     volumes:
     - /data/db/mongodb:/data/db
-    ports:
-    - 27018:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
+    networks:
+    - bunkerhill-network
+networks:
+  bunkerhill-network:
