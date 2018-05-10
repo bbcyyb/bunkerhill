@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"runtime"
@@ -64,4 +65,48 @@ func (lw *LoggerWrapper) Async(msgLen ...int64) *LoggerWrapper {
 	}
 
 	lw.msgChan = make(chan *logMsg, bl.msgChanLen)
+	logMsgPool = &sync.Pool{
+		New: func() interface{} {
+			return &logMsg{}
+		},
+	}
+
+	lw.wg.Add(1)
+	go lw.startLogger()
+	return lw
+}
+
+func (lw *LoggerWrapper) setLoggerCore(adapterName string, configs ...string) error {
+	config := append(configs, "{}")[0]
+	for _, l := range lw.outputs {
+		if l.name == adapterName {
+			return fmt.Errorf("logs: duplicate adaptername %q (you have set this logger before)", adapterName)
+		}
+	}
+
+	log, ok := adapters[adapterName]
+	if !ok {
+		return fmt.Errorf("logs: unknown adaptername %q (forgotten Register?)", adapterName)
+	}
+
+	lg := log()
+	err := lg.Init(config)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "logs.LoggerWrapper.SetLogger: "+err.Error())
+		return err
+	}
+
+	lw.outputs = append(lw.outputs, &nameLogger{name: adapterName, Logger: lg})
+	return nil
+}
+
+func (lw *LoggerWrapper) SetLogger(adapterName string, configs ...string) error {
+	lw.lock.Lock()
+	def lw.lock.Unlock()
+	if !lw.init {
+		lw.outputs = []*nameLogger{}
+		lw.init = true
+	}
+
+	return lw.setLoggerCore(adapterName, configs...)
 }
