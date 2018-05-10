@@ -110,3 +110,19 @@ func (lw *LoggerWrapper) SetLogger(adapterName string, configs ...string) error 
 
 	return lw.setLoggerCore(adapterName, configs...)
 }
+
+func (lw *LoggerWrapper) DelLogger(adapterName string) error {
+
+}
+
+func (lw *LoggerWrapper) writeToLoggers(when time.Time, msg string, level int) {
+
+}
+
+func (lw *LoggerWrapper) Write(p []byte) (n int, err error) {
+
+}
+
+func (lw *LoggerWrapper) writeMsg(logLevel int, msg string, v ...interface{}) error {
+
+}
