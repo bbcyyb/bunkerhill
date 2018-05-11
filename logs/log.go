@@ -1,11 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"os"
+	"path"
 	"runtime"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -48,6 +48,7 @@ func NewLogger(channelLens ...int64) *LoggerWrapper {
 		lw.msgChanLen = defaultAsyncMsgLen
 	}
 	lw.signalChan = make(chan string, 1)
+	// Console Logger is set as default logger handler
 	lw.setLogger(AdapterConsole)
 	return lw
 }
@@ -64,7 +65,7 @@ func (lw *LoggerWrapper) Async(msgLen ...int64) *LoggerWrapper {
 		lw.msgChanLen = msgLen[0]
 	}
 
-	lw.msgChan = make(chan *logMsg, bl.msgChanLen)
+	lw.msgChan = make(chan *logMsg, lw.msgChanLen)
 	logMsgPool = &sync.Pool{
 		New: func() interface{} {
 			return &logMsg{}
@@ -76,7 +77,7 @@ func (lw *LoggerWrapper) Async(msgLen ...int64) *LoggerWrapper {
 	return lw
 }
 
-func (lw *LoggerWrapper) setLoggerCore(adapterName string, configs ...string) error {
+func (lw *LoggerWrapper) setLogger(adapterName string, configs ...string) error {
 	config := append(configs, "{}")[0]
 	for _, l := range lw.outputs {
 		if l.name == adapterName {
@@ -102,27 +103,221 @@ func (lw *LoggerWrapper) setLoggerCore(adapterName string, configs ...string) er
 
 func (lw *LoggerWrapper) SetLogger(adapterName string, configs ...string) error {
 	lw.lock.Lock()
-	def lw.lock.Unlock()
+	defer lw.lock.Unlock()
 	if !lw.init {
 		lw.outputs = []*nameLogger{}
 		lw.init = true
 	}
 
-	return lw.setLoggerCore(adapterName, configs...)
+	return lw.setLogger(adapterName, configs...)
 }
 
 func (lw *LoggerWrapper) DelLogger(adapterName string) error {
+	lw.lock.Lock()
+	defer lw.lock.Unlock()
+	outputs := []*nameLogger{}
+	for _, lg := range lw.outputs {
+		if lg.name == adapterName {
+			lg.Destroy()
+		} else {
+			outputs = append(outputs, lg)
+		}
+	}
 
-}
+	if len(outputs) == len(lw.outputs) {
+		return fmt.Errorf("logs: unknown adaptername %q (forgotten Register?)", adapterName)
+	}
 
-func (lw *LoggerWrapper) writeToLoggers(when time.Time, msg string, level int) {
-
+	lw.outputs = outputs
+	return nil
 }
 
 func (lw *LoggerWrapper) Write(p []byte) (n int, err error) {
+	if len(p) == 0 {
+		return 0, nil
+	}
 
+	if p[len(p)-1] == '\n' {
+		p = p[0 : len(p)-1]
+	}
+
+	err = lw.writeMsg(levelLoggerImpl, string(p))
+	if err == nil {
+		return len(p), err
+	}
+
+	return 0, err
 }
 
 func (lw *LoggerWrapper) writeMsg(logLevel int, msg string, v ...interface{}) error {
+	if !lw.init {
+		lw.lock.Lock()
+		lw.setLogger(AdapterConsole)
+		lw.lock.Unlock()
+	}
 
+	if len(v) > 0 {
+		msg = fmt.Sprintf(msg, v...)
+	}
+
+	when := time.Now()
+	if lw.enableFuncCallDepth {
+		_, file, line, ok := runtime.Caller(lw.loggerFuncCallDepth)
+		if !ok {
+			file = "???"
+			line = 0
+		}
+
+		_, filename := path.Split(file)
+		msg = "[" + filename + ":" + strconv.Itoa(line) + "]" + msg
+	}
+
+	if logLevel == levelLoggerImpl {
+		logLevel = LevelCritical
+	} else {
+		msg = levelPrefix[logLevel] + msg
+	}
+
+	if lw.asynchronous {
+		lm := logMsgPool.Get().(*logMsg)
+		lm.level = logLevel
+		lm.msg = msg
+		lm.when = when
+		lw.msgChan <- lm
+	} else {
+		lw.writeToLoggers(when, msg, logLevel)
+	}
+
+	return nil
+}
+
+func (lw *LoggerWrapper) writeToLoggers(when time.Time, msg string, level int) {
+	for _, l := range lw.outputs {
+		err := l.Write(when, msg, level)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "unable to Write to adapter:%v,error:%v\n", l.name, err)
+		}
+	}
+}
+
+func (lw *LoggerWrapper) SetLevel(l int) {
+	lw.level = l
+}
+
+func (lw *LoggerWrapper) SetLogFuncCallDepth(d int) {
+	lw.loggerFuncCallDepth = d
+}
+
+func (lw *LoggerWrapper) GetLogFuncCallDepth() int {
+	return lw.loggerFuncCallDepth
+}
+
+func (lw *LoggerWrapper) EnableFuncCallDepth(b bool) {
+	lw.enableFuncCallDepth = b
+}
+
+func (lw *LoggerWrapper) startLogger() {
+	gameOver := false
+	for {
+		select {
+		case lm := <-lw.msgChan:
+			lw.writeToLoggers(lm.when, lm.msg, lm.level)
+			logMsgPool.Put(lm)
+		case sg := <-lw.signalChan:
+			lw.flush()
+			if sg == "close" {
+				for _, l := range lw.outputs {
+					l.Destroy()
+				}
+
+				lw.outputs = nil
+				gameOver = true
+			}
+
+			lw.wg.Done()
+		}
+
+		if gameOver {
+			break
+		}
+	}
+}
+
+func (lw *LoggerWrapper) Critical(format string, v ...interface{}) {
+	if LevelCritical > lw.level {
+		return
+	}
+
+	lw.writeMsg(LevelCritical, format, v...)
+}
+
+func (lw *LoggerWrapper) Error(format string, v ...interface{}) {
+	if LevelError > lw.level {
+		return
+	}
+
+	lw.writeMsg(LevelError, format, v...)
+}
+
+func (lw *LoggerWrapper) Wran(format string, v ...interface{}) {
+	if LevelWarning > lw.level {
+		return
+	}
+
+	lw.writeMsg(LevelWarning, format, v...)
+}
+
+func (lw *LoggerWrapper) Info(format string, v ...interface{}) {
+	if LevelInfo > lw.level {
+		return
+	}
+
+	lw.writeMsg(LevelInfo, format, v...)
+}
+
+func (lw *LoggerWrapper) Debug(format string, v ...interface{}) {
+	if LevelDebug > lw.level {
+		return
+	}
+
+	lw.writeMsg(LevelDebug, format, v...)
+}
+
+func (lw *LoggerWrapper) Flush() {
+	if lw.asynchronous {
+		lw.signalChan <- "flush"
+		lw.wg.Wait()
+		lw.wg.Add(1)
+		return
+	}
+
+	lw.flush()
+}
+
+func (lw *LoggerWrapper) flush() {
+	if lw.asynchronous {
+		for {
+			if len(lw.msgChan) > 0 {
+				lm := <-lw.msgChan
+				lw.writeToLoggers(lm.when, lm.msg, lm.level)
+				logMsgPool.Put(lm)
+				continue
+			}
+			break
+		}
+	}
+
+	for _, l := range lw.outputs {
+		l.Flush()
+	}
+}
+
+func (lw *LoggerWrapper) Close() {
+	if lw.asynchronous {
+		lw.signalChan <- "close"
+		lw.wg.Wait()
+		close(lw.msgChan)
+	} else {
+		lw.flush()
+	}
 }
