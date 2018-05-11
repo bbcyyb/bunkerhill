@@ -41,11 +41,17 @@ func (c *consoleLogger) Write(when time.Time, msg string, level int) error {
 		return nil
 	}
 
+	t := formatTimeShort(when)
+
+	header := "[" + string(t) + "]"
+
 	if c.Colorful {
-		msg = colors[level](msg)
+		header = colors[level](header)
 	}
 
-	c.writer.write(when, msg)
+	msg = header + msg
+
+	c.writer.write(msg)
 	return nil
 }
 
