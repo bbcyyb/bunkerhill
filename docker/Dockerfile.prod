@@ -6,6 +6,7 @@ COPY bin bin
 COPY config config
 COPY cmd cmd
 COPY handlers handlers
+COPY logs logs
 COPY models models
 COPY restapi restapi
 COPY storage storage

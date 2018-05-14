@@ -6,6 +6,7 @@ import (
 	"path"
 	"runtime"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -200,20 +201,23 @@ func (lw *LoggerWrapper) writeToLoggers(when time.Time, msg string, level int) {
 	}
 }
 
-func (lw *LoggerWrapper) SetLevel(l int) {
+func (lw *LoggerWrapper) SetLevel(l int) *LoggerWrapper {
 	lw.level = l
+	return lw
 }
 
-func (lw *LoggerWrapper) SetLogFuncCallDepth(d int) {
+func (lw *LoggerWrapper) SetLogFuncCallDepth(d int) *LoggerWrapper {
 	lw.loggerFuncCallDepth = d
+	return lw
 }
 
 func (lw *LoggerWrapper) GetLogFuncCallDepth() int {
 	return lw.loggerFuncCallDepth
 }
 
-func (lw *LoggerWrapper) EnableFuncCallDepth(b bool) {
+func (lw *LoggerWrapper) EnableFuncCallDepth(b bool) *LoggerWrapper {
 	lw.enableFuncCallDepth = b
+	return lw
 }
 
 func (lw *LoggerWrapper) startLogger() {
@@ -241,6 +245,30 @@ func (lw *LoggerWrapper) startLogger() {
 			break
 		}
 	}
+}
+
+func FormatLog(f interface{}, v ...interface{}) string {
+	var msg string
+	switch f.(type) {
+	case string:
+		msg = f.(string)
+		if len(v) == 0 {
+			return msg
+		}
+		if strings.Contains(msg, "%") && !strings.Contains(msg, "%%") {
+			//format string
+		} else {
+			//do not contain format char
+			msg += strings.Repeat(" %v", len(v))
+		}
+	default:
+		msg = fmt.Sprint(f)
+		if len(v) == 0 {
+			return msg
+		}
+		msg += strings.Repeat(" %v", len(v))
+	}
+	return fmt.Sprintf(msg, v...)
 }
 
 func (lw *LoggerWrapper) Critical(format string, v ...interface{}) {

@@ -1,11 +1,12 @@
 package storage
 
 import (
-	"log"
 	"os"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+
+	logger "github.com/bbcyyb/bunkerhill/logs/simple"
 )
 
 const (
@@ -22,7 +23,7 @@ func getSession() *mgo.Session {
 		var err error
 		mgoSession, err = mgo.Dial(url)
 		if err != nil {
-			log.Println(err.Error())
+			logger.Error(err.Error())
 			panic(err)
 		}
 	}

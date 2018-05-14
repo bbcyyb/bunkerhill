@@ -1,8 +1,9 @@
 package config
 
 import (
-	"log"
 	"sync"
+
+	logger "github.com/bbcyyb/bunkerhill/logs/simple"
 )
 
 var (
@@ -26,7 +27,7 @@ func NewAdapter() *Adapter {
 }
 
 func (a *Adapter) Register(mode, path string) {
-	log.Printf("** Register configuration module [%s]\n", mode)
+	logger.Info("** Register configuration module [%s]\n", mode)
 	mutex.Lock()
 	if _, ok := a.confs[mode]; ok {
 		panic("config: Register called twice for adapter " + mode)
@@ -34,7 +35,7 @@ func (a *Adapter) Register(mode, path string) {
 
 	conf, err := newConfig(mode, path)
 	if err != nil {
-		log.Println(err.Error())
+		logger.Error(err.Error())
 		panic("config: Attempt to create new config entry " + mode + " failed.")
 	}
 

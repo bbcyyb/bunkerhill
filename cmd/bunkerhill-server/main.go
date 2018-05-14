@@ -11,6 +11,8 @@ import (
 	flags "github.com/jessevdk/go-flags"
 
 	"github.com/bbcyyb/bunkerhill/config"
+	"github.com/bbcyyb/bunkerhill/logs"
+	logger "github.com/bbcyyb/bunkerhill/logs/simple"
 	"github.com/bbcyyb/bunkerhill/restapi"
 	"github.com/bbcyyb/bunkerhill/restapi/operations"
 )
@@ -19,12 +21,16 @@ import (
 // Make sure not to overwrite this file after you generated it because all your edits would be lost!
 
 func main() {
-	log.Println("Start bunkerhill-server ....")
-
 	adapter := config.NewAdapter()
 	// env is high priority
 	adapter.Register("ini", "config/config.ini")
 	adapter.Register("env", "")
+	if adapter.GetValue("MODE") == "dev" {
+		logger.SetLevel(logs.LevelDebug)
+	} else {
+		logger.SetLevel(logs.LevelInfo)
+	}
+	logger.Info("Start bunkerhill-server ....")
 
 	logo := `
 * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -53,16 +59,15 @@ func main() {
 	`
 
 	if adapter.GetValue("MODE") == "dev" {
-		log.Println(logoDev)
+		logger.Info(logoDev)
 	} else {
-		log.Println(logo)
+		logger.Info(logo)
 	}
+	logger.Info("** OS: %s, Architecture: %s", runtime.GOOS, runtime.GOARCH)
 
-	log.Printf("** OS: %s\n** Architecture: %s\n", runtime.GOOS, runtime.GOARCH)
-
-	log.Println("Available variables as following:")
+	logger.Info("Available variables as following:")
 	for _, m := range adapter.Review() {
-		log.Printf("** %s", m)
+		logger.Debug("** %s", m)
 	}
 
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
@@ -71,6 +76,7 @@ func main() {
 	}
 
 	api := operations.NewBunkerhillAPI(swaggerSpec)
+	api.Logger = func(f string, v ...interface{}) { logger.Info(f, v...) }
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
 
